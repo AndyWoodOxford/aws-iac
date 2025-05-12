@@ -9,7 +9,7 @@ resource "aws_iam_role" "ssm" {
         Effect = "Allow"
         Sid = "TODO"
         Principal = {
-          Service = "ec2.amazoneaws.com"
+          Service = "ec2.amazonaws.com"
         }
       }
     ]
