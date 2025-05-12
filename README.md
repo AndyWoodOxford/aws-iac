@@ -1,2 +1,2 @@
 # aws-iac
-Refreshers for Terrraform, Ansible etc.
+Refreshers for Terraform, Ansible etc.
