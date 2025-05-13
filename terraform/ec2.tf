@@ -1,6 +1,6 @@
 # Launch key
 resource "aws_key_pair" "launch" {
-  key_name   = local.deployment_prefix
+  key_name   = local.ec2_key_pair_name
   public_key = file(var.public_key_path)
 }
 
@@ -44,3 +44,17 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 }
 
 # Instance
+resource "aws_instance" "vm" {
+  ami           = var.ami_amazon_linux[data.aws_region.current.name]
+  instance_type = var.instance_type
+  key_name      = local.ec2_key_pair_name
+
+  associate_public_ip_address = true
+
+  vpc_security_group_ids = [aws_security_group.basic.id]
+
+  iam_instance_profile = aws_iam_instance_profile.ssm.name
+
+  tags = local.standard_tags
+  volume_tags = local.standard_tags
+}

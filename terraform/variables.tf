@@ -1,4 +1,12 @@
 # EC2
+variable "ami_amazon_linux" {
+  type        = map(string)
+  description = "ID for latest Amazon Linux AMI"
+  default = {
+    eu-west-2 = "ami-0dfe0f1abee59c78d"
+  }
+}
+
 variable "public_key_path" {
   type        = string
   description = "Path to the SSH public key file used to launch instances"

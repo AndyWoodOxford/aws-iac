@@ -8,4 +8,5 @@ locals {
   }
 
   control_host_ipv4 = chomp(data.http.localhost.response_body)
+  ec2_key_pair_name = local.deployment_prefix
 }
