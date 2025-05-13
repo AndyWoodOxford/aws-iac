@@ -7,5 +7,5 @@ locals {
     Name = local.deployment_prefix
   }
 
-  control_host_ipv4   = chomp(data.http.localhost.response_body)
+  control_host_ipv4 = chomp(data.http.localhost.response_body)
 }

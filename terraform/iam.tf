@@ -7,7 +7,7 @@ resource "aws_iam_role" "ssm" {
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid = "ssm"
+        Sid    = "ssm"
         Principal = {
           Service = "ec2.amazonaws.com"
         }
@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "ssm" {
     data.aws_iam_policy.AmazonSSMManagedInstanceCorePolicy.arn
   ])
 
-  role = aws_iam_role.ssm.name
+  role       = aws_iam_role.ssm.name
   policy_arn = each.value
 }
 
