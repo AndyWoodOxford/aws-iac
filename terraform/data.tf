@@ -17,3 +17,8 @@ data "aws_iam_policy" "AmazonSSMManagedInstanceCorePolicy" {
 data "aws_iam_policy" "AmazonCloudWatchAgentServerPolicy" {
   arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
+
+# VPC
+data "aws_vpc" "default" {
+  default = true
+}
