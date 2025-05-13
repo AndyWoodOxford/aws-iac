@@ -5,6 +5,12 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 # EC2
+data "aws_ami" "amazon_linux" {
+  owners      = ["amazon"]
+  most_recent = true
+  name_regex  = "^al2023-ami-2023\\.7\\.2025[0-9]{4}.+-x86_64$"
+}
+
 data "http" "localhost" {
   url = "https://ipv4.icanhazip.com/"
 }
@@ -21,17 +27,5 @@ data "aws_iam_policy" "AmazonCloudWatchAgentServerPolicy" {
 # VPC
 data "aws_vpc" "default" {
   default = true
-}
-
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-
-  filter {
-    name   = "default-for-az"
-    values = ["true"]
-  }
 }
 

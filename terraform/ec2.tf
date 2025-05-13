@@ -45,7 +45,9 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 
 # Instance
 resource "aws_instance" "vm" {
-  ami           = var.ami_amazon_linux[data.aws_region.current.name]
+  count = var.instance_count
+
+  ami           = data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
   key_name      = local.ec2_key_pair_name
 
@@ -55,6 +57,6 @@ resource "aws_instance" "vm" {
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
-  tags = local.standard_tags
+  tags        = local.standard_tags
   volume_tags = local.standard_tags
 }

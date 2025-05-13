@@ -1,12 +1,4 @@
 # EC2
-variable "ami_amazon_linux" {
-  type        = map(string)
-  description = "ID for latest Amazon Linux AMI"
-  default = {
-    eu-west-2 = "ami-0dfe0f1abee59c78d"
-  }
-}
-
 variable "public_key_path" {
   type        = string
   description = "Path to the SSH public key file used to launch instances"
@@ -20,5 +12,15 @@ variable "instance_type" {
   validation {
     condition     = contains(["t2.micro", "t3.micro"], var.instance_type)
     error_message = "Only free-tier instances can be spun up."
+  }
+}
+
+variable "instance_count" {
+  type        = number
+  description = "Number of instances"
+  default     = 1
+  validation {
+    condition     = var.instance_count <= 5
+    error_message = "No more than 5 instances can be launched."
   }
 }
