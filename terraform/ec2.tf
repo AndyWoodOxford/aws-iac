@@ -57,6 +57,14 @@ resource "aws_instance" "vm" {
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
-  tags        = local.standard_tags
+  tags = merge(
+    local.standard_tags,
+    {
+      Name = (var.instance_count > 1
+        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
+        : local.standard_tags["Name"]
+      )
+    }
+  )
   volume_tags = local.standard_tags
 }
