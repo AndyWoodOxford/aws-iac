@@ -1,9 +1,3 @@
-# Account
-data "aws_caller_identity" "current" {}
-
-# Region
-data "aws_region" "current" {}
-
 # EC2
 data "aws_ami" "amazon_linux" {
   owners      = ["amazon"]
