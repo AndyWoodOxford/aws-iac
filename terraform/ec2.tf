@@ -51,11 +51,20 @@ resource "aws_instance" "vm" {
   instance_type = var.instance_type
   key_name      = local.ec2_key_pair_name
 
+  root_block_device {
+    encrypted             = true
+    delete_on_termination = true
+  }
+
   associate_public_ip_address = true
 
   vpc_security_group_ids = [aws_security_group.basic.id]
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
+
+  metadata_options {
+    http_tokens = "required"
+  }
 
   tags = merge(
     local.standard_tags,
