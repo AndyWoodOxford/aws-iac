@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.5.7"
+  required_version = ">= 1.12.1"
 
   backend "s3" {}
 
@@ -12,6 +12,16 @@ terraform {
     http = {
       source  = "hashicorp/http"
       version = "~> 3.5"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+
+  default_tags {
+    tags = {
+      category = "jobhunt2025"
     }
   }
 }
