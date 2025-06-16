@@ -26,7 +26,7 @@ function fn_fail_if_missing() {
 
 ##### ENTRY
 AWS_REGION="eu-west-2"
-BACKEND_CONFIG_KEY="jobhunt2025"
+BACKEND_CONFIG_KEY="jobhunt2025"  # make this an option/positional argument if needed
 
 BOLD="\033[1m"
 GREEN="\033[1;32m"
