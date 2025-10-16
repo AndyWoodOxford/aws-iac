@@ -21,7 +21,6 @@ function fn_usage() {
 ##### ENTRY
 BOLD="\033[1m"
 CYAN="\033[1;36m"
-RED="\033[1;31m"
 YELLOW='\033[1;33m'
 RESET="\033[0m"
 
