@@ -1,4 +1,6 @@
 locals {
+  account_id = data.aws_caller_identity.current.account_id
+
   deployment_prefix = "andy"
 
   standard_tags = {
