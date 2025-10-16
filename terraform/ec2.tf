@@ -62,6 +62,10 @@ resource "aws_instance" "vm" {
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   metadata_options {
     http_tokens = "required"
   }
