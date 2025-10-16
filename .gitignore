@@ -3,4 +3,5 @@
 
 # Terraform
 **/.terraform
-**/tf.plan
+**/*.tfplan
+**/tfplan.json
