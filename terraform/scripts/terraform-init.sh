@@ -57,3 +57,5 @@ terraform init -backend-config="bucket=${ACCOUNT_ID}-terraform-remote-state" \
   -backend-config="dynamodb_table=${ACCOUNT_ID}-terraform-remote-state" \
   -backend-config="encrypt=true" \
   -backend-config="region=${AWS_REGION}"
+
+  exit 0

@@ -9,10 +9,11 @@ function fn_usage() {
   echo "A wrapper for a \"terraform plan\" command."
   echo
   echo "Usage: $0 [-h]"
-  echo -e  "\033[1;36m""Options${COLOUR_OFF}"
-  echo "-h             Show this usage message and exit"
   echo
-  echo "The optional \"TF_EXTRA_VARS\" environment variable is passed into the plan."
+  echo -e  "${CYAN}Options${RESET}"
+  echo -e "  ${YELLOW}-h${RESET}    ${BOLD}Show this usage message and exit${RESET}"
+  echo
+  echo -e "The optional ${YELLOW}\"TF_EXTRA_VARS\"${RESET} environment variable is passed into the plan."
   echo
 }
 
@@ -30,7 +31,9 @@ function fn_fail_if_missing() {
 AWS_REGION="eu-west-2"
 
 BOLD="\033[1m"
+CYAN="\033[1;36m"
 RED="\033[1;31m"
+YELLOW='\033[1;33m'
 RESET="\033[0m"
 
 while getopts "h" opt; do
@@ -78,3 +81,5 @@ then
      | jq -r '([.resource_changes[]?.change.actions?]|flatten)|{"create":(map(select(.=="create"))|length),"update":(map(select(.=="update"))|length),"delete":(map(select(.=="delete"))|length)}' \
      | tee "${TERRAFORM_PLAN_JSON}"
 fi
+
+exit 0

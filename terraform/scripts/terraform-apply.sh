@@ -9,13 +9,13 @@ function fn_usage() {
   echo "Apply the Terraform plan. No arguments - configuration is driven by environment"
   echo "variables."
   echo
-  echo "Usage:"
-  echo "  $0 [-h]"
+  echo -e  "${CYAN}Options${RESET}"
+  echo -e "  ${YELLOW}-h${RESET}    ${BOLD}Show this usage message and exit${RESET}"
+  echo
+  echo -e "The optional ${YELLOW}\"TF_EXTRA_VARS\"${RESET} environment variable is passed into the plan."
   echo
   echo -e "${BOLD}IMPORTANT${RESET} The script checks that these environment variables are defined:"
   echo -e "  ${BOLD}TERRAFORM_PLAN_FILE${RESET}  Terraform plan, e.g. \"plan.cache\""
-  echo
-  echo "The optional \"TF_EXTRA_VARS\" environment variable is passed into the command."
   echo
   echo "The following environment variables - if defined - will manage the outputs"
   echo "of this script:"
@@ -34,10 +34,10 @@ function fn_fail_if_missing() {
 }
 
 ##### ENTRY
-AWS_REGION="eu-west-2"
-
 BOLD="\033[1m"
+CYAN="\033[1;36m"
 RED="\033[1;31m"
+YELLOW='\033[1;33m'
 RESET="\033[0m"
 
 while getopts "h" opt; do
@@ -67,3 +67,5 @@ then
   echo "Copying state into ${TERRAFORM_CURRENT_STATE}"
   terraform show -no-color > "${TERRAFORM_CURRENT_STATE}"
 fi
+
+exit 0
