@@ -15,7 +15,8 @@ Provisioning with Terraform, configuring with Ansible using a
 
 ## Overview
 
-
+**NB** Use the [bash wrapper](./scripts/terraform-init.sh) to initialise this folder - 
+run with the `-h` option to view the usage message.
 
 ## Requirements
 
