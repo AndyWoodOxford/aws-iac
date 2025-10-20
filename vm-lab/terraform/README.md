@@ -1,6 +1,7 @@
-# AWS Autoscaling.
+# VM Lab
 
-Experimentation with AWS autoscaling.
+Provisioning with Terraform, configuring with Ansible using a
+[dynamic inventory](../ansible/README.md).
 
 ## Table of Contents
 
