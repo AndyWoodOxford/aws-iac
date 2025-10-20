@@ -1,6 +1,13 @@
+# MacOS
+.DS_Store
+
 # IDE
 **/.idea
 
 # Terraform
 **/.terraform
-**/tf.plan
+**/*.tfplan
+**/tfplan.*
+
+# WIP
+**/*-tmp.sh

@@ -1,8 +1,18 @@
+# Account
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 # EC2
 data "aws_ami" "amazon_linux" {
   owners      = ["amazon"]
   most_recent = true
-  name_regex  = "^al2023-ami-2023\\.7\\.2025[0-9]{4}.+-x86_64$"
+
+  name_regex = "^amzn2-ami-hvm-2\\.\\d+\\..+$"
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
 }
 
 data "http" "localhost" {
