@@ -132,6 +132,12 @@ resource "aws_launch_template" "example" {
   image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
 
+  block_device_mappings {
+    device_name = "/dev/sdf"
+    ebs {
+      volume_size = 20
+    }
+  }
   ebs_optimized = true
 
   vpc_security_group_ids = [aws_security_group.egress.id]
@@ -140,6 +146,10 @@ resource "aws_launch_template" "example" {
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ssm.name
+  }
+
+  metadata_options {
+    http_tokens = "required"
   }
 
   tags = local.standard_tags
@@ -194,18 +204,22 @@ resource "aws_vpc_security_group_egress_rule" "targets" {
   ip_protocol       = "tcp"
   from_port         = 0
   to_port           = 0
-  cidr_ipv4         = data.aws_vpc.default.cidr_block
+  #cidr_ipv4         = data.aws_vpc.default.cidr_block
+  cidr_ipv4 = "0.0.0.0/0"
 
   tags = local.standard_tags
 }
 
+#tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
 resource "aws_lb" "example" {
-  name               = var.resource_prefix
-  load_balancer_type = "application"
-  subnets            = data.aws_subnets.default.ids
-  security_groups    = [aws_security_group.alb.id]
+  name                       = var.resource_prefix
+  load_balancer_type         = "application"
+  subnets                    = data.aws_subnets.default.ids
+  security_groups            = [aws_security_group.alb.id]
+  drop_invalid_header_fields = true
 }
 
+#tfsec:ignore:aws-elb-http-not-used   # https to come soon
 resource "aws_lb_listener" "example" {
   load_balancer_arn = aws_lb.example.arn
   port              = 80

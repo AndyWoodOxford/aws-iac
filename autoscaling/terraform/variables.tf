@@ -8,16 +8,6 @@ variable "resource_prefix" {
   default = "example"
 }
 
-variable "region" {
-  description = "Resources will be managed in this region"
-  type        = string
-  validation {
-    condition     = contains(["eu-west-1", "eu-west-2"], var.region)
-    error_message = "Regions are restricted to Dublin and Ireland."
-  }
-  default = "eu-west-2"
-}
-
 variable "instance_type" {
   type        = string
   description = "Type of the EC2 instance"
