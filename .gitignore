@@ -8,3 +8,6 @@
 **/.terraform
 **/*.tfplan
 **/tfplan.*
+
+# WIP
+**/*-tmp.sh
