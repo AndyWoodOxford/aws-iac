@@ -77,12 +77,12 @@ echo
 if [ "${dryrun}" = true ]
 then
   echo "This script is running in \"Dry Run\" mode. This command would have otherwise been executed:"
-  echo -e "${YELLOW}terraform init \
-  -backend-config=\"bucket=${ACCOUNT_ID}-terraform-remote-state\"\
-  -backend-config=\"key=${remote_state_key}/terraform.tfstate\"\
-  -backend-config=\"dynamodb_table=${ACCOUNT_ID}-terraform-remote-state\"\
-  -backend-config=\"region=${AWS_REGION}\"\
-  -backend-config=\"encrypt=true\" \
+  echo -e "${YELLOW}terraform init \\ \n\
+  -backend-config=\"bucket=${ACCOUNT_ID}-terraform-remote-state\" \\ \n\
+  -backend-config=\"key=${remote_state_key}/terraform.tfstate\" \\ \n\
+  -backend-config=\"dynamodb_table=${ACCOUNT_ID}-terraform-remote-state\" \\ \n\
+  -backend-config=\"region=${AWS_REGION}\" \\ \n\
+  -backend-config=\"encrypt=true\"\n\
   ${RESET}"
 else
   terraform init -backend-config="bucket=${ACCOUNT_ID}-terraform-remote-state" \
