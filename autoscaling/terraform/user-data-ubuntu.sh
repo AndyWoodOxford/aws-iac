@@ -24,5 +24,5 @@ fn_httpd_server() {
 }
 
 tmpdir=$(mktemp -d)
-fn_install_ssm_agent "${tmpdir}"
+#fn_install_ssm_agent "${tmpdir}"
 fn_httpd_server "${tmpdir}"
