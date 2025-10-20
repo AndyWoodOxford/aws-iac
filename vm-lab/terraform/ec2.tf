@@ -4,45 +4,6 @@ resource "aws_key_pair" "launch" {
   public_key = file(var.public_key_path)
 }
 
-# Security group with http/https egress and ssh ingress from localhost
-resource "aws_security_group" "basic" {
-  name        = local.deployment_prefix
-  description = "Basic egress and ingress for tech refresh"
-  vpc_id      = data.aws_vpc.default.id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_egress_rule" "http" {
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 80
-  to_port           = 80
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.basic.id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_egress_rule" "https" {
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  to_port           = 443
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.basic.id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ssh" {
-  cidr_ipv4         = "${local.control_host_ipv4}/32"
-  from_port         = 22
-  to_port           = 22
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.basic.id
-
-  tags = local.standard_tags
-}
-
 # Instance
 resource "aws_instance" "vm" {
   count = var.instance_count
@@ -52,13 +13,16 @@ resource "aws_instance" "vm" {
   key_name      = local.ec2_key_pair_name
 
   root_block_device {
+    volume_type           = "gp3"
+    volume_size           = 25
     encrypted             = true
     delete_on_termination = true
   }
 
   associate_public_ip_address = true
+  subnet_id                   = module.vpc.public_subnets[count.index % length(module.vpc.public_subnets)]
 
-  vpc_security_group_ids = [aws_security_group.basic.id]
+  vpc_security_group_ids = [aws_security_group.vmlab.id]
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
@@ -79,5 +43,13 @@ resource "aws_instance" "vm" {
       )
     }
   )
-  volume_tags = local.standard_tags
+
+  volume_tags = merge(local.standard_tags,
+    {
+      Name = (var.instance_count > 1
+        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
+        : local.standard_tags["Name"]
+      )
+    }
+  )
 }

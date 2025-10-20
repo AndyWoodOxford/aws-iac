@@ -1,7 +1,6 @@
-# VM Lab
+# AWS Autoscaling.
 
-Provisioning with Terraform, configuring with Ansible using a
-[dynamic inventory](../ansible/README.md).
+Experimentation with AWS autoscaling.
 
 ## Table of Contents
 
@@ -15,15 +14,14 @@ Provisioning with Terraform, configuring with Ansible using a
 
 ## Overview
 
-**NB** Use the [bash wrapper](./scripts/terraform-init.sh) to initialise this folder - 
-run with the `-h` option to view the usage message.
+
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.100 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.5 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.5 |
 
 ## Inputs
@@ -44,7 +42,9 @@ run with the `-h` option to view the usage message.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | 6.4.0 |
 
 ## Resources
 

@@ -6,7 +6,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.100"
+      version = "~> 6.5"
     }
 
     http = {
@@ -19,9 +19,11 @@ terraform {
 provider "aws" {
   region = "eu-west-2"
 
+  # Ansible dynamic inventory is aligned with these tags
   default_tags {
     tags = {
-      category = "jobhunt2025"
+      category    = "vmlab"
+      application = "iac"
     }
   }
 }
