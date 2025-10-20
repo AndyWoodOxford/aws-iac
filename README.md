@@ -1,6 +1,10 @@
 # aws-iac
 Refreshers for Terraform, Ansible etc.
 
+## Autoscaling
+The [autoscaling folder](./autoscaling/README.md) contains Terraform code that
+manages an AWS ASG.
+
 ## Terraform
 The [`terraform-init.sh`](./terraform/scripts/terraform-init.sh) script wraps the `terraform init`
 command, using an S3 backend:
