@@ -162,7 +162,7 @@ resource "aws_autoscaling_group" "example" {
     version = "$Latest"
   }
 
-  for_each = true
+  force_delete = true
 
   tag {
     key                 = "Name"
