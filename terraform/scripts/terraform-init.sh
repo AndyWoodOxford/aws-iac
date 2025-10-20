@@ -12,6 +12,7 @@ function fn_usage() {
   echo "Usage: $0 [-h] KEY"
   echo
   echo -e  "${CYAN}Options${RESET}"
+  echo "  -d       \"Dry Run\" - show but do not execute the \"terraform init\" command"
   echo "  -h       Show this usage message and exit"
   echo
   echo -e "${CYAN}Positional arguments${RESET}"
@@ -36,10 +37,15 @@ BOLD="\033[1m"
 CYAN="\033[1;36m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
+YELLOW='\033[0;33m'
 RESET="\033[0m"
 
-while getopts "h" opt; do
+dryrun=false
+while getopts "dh" opt; do
   case "${opt}" in
+  d)
+    dryrun=true
+    ;;
   h | \?)
     fn_usage
     exit 0
@@ -66,11 +72,24 @@ fn_fail_if_unset "${BOLD}AWS_SECRET_ACCESS_KEY${RESET} is not defined" "${AWS_SE
 
 ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 echo -e "Account id is ${GREEN}${ACCOUNT_ID}${RESET}"
+echo
 
-echo terraform init -backend-config="bucket=${ACCOUNT_ID}-terraform-remote-state" \
-  -backend-config="key=${remote_state_key}/terraform.tfstate"                     \
-  -backend-config="dynamodb_table=${ACCOUNT_ID}-terraform-remote-state"           \
-  -backend-config="region=${AWS_REGION}"                                          \
-  -backend-config="encrypt=true"
+if [ "${dryrun}" = true ]
+then
+  echo "This script is running in \"Dry Run\" mode. This command would have otherwise been executed:"
+  echo -e "${YELLOW}terraform init \
+  -backend-config=\"bucket=${ACCOUNT_ID}-terraform-remote-state\"\
+  -backend-config=\"key=${remote_state_key}/terraform.tfstate\"\
+  -backend-config=\"dynamodb_table=${ACCOUNT_ID}-terraform-remote-state\"\
+  -backend-config=\"region=${AWS_REGION}\"\
+  -backend-config=\"encrypt=true\" \
+  ${RESET}"
+else
+  terraform init -backend-config="bucket=${ACCOUNT_ID}-terraform-remote-state" \
+    -backend-config="key=${remote_state_key}/terraform.tfstate"                \
+    -backend-config="dynamodb_table=${ACCOUNT_ID}-terraform-remote-state"      \
+    -backend-config="region=${AWS_REGION}"                                     \
+    -backend-config="encrypt=true"
+fi
 
   exit 0
