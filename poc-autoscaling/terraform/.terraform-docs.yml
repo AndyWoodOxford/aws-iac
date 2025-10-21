@@ -1,0 +1,46 @@
+---
+formatter: markdown table
+header-from: main.tf
+content: |-
+  # AWS Autoscaling.
+
+  Experimentation with AWS autoscaling.
+
+  ## Table of Contents
+
+  - [Overview][1]
+  - [Example Input][2]
+  - [Requirements][3]
+  - [Inputs][4]
+  - [Outputs][5]
+  - [Modules][6]
+  - [Resources][7]
+
+  ## Overview
+
+  {{ .Header }}
+
+  {{ .Requirements }}{{"\n"}}
+  {{ .Inputs }}{{"\n"}}
+  {{ .Outputs }}{{"\n"}}
+  {{ .Modules }}{{"\n"}}
+  {{ .Resources }}{{"\n"}}
+  [1]: #overview
+  [2]: #example-input
+  [3]: #requirements
+  [4]: #inputs
+  [5]: #outputs
+  [6]: #modules
+  [7]: #resources
+
+sort:
+  enabled: true
+output:
+  file: README.md
+  mode: replace
+  template: |-
+    {{ .Content }}{{"\n"}}
+settings:
+  indent: 2
+  read-comments: false
+  hide-empty: false

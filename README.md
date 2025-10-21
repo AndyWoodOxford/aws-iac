@@ -6,10 +6,13 @@ the state locks).
 
 Assumptions:
 * the S3 bucket and DynamoDB table must exist (check the script for the names)
-* the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables must be defined
+* the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables must be defined and permit appropriate privileges
 
-Use the following to statically check the code:
+I have used the following to statically check the code:
 ```shell
+cd terraform
+terraform validate
+tflint
 tfsec --exclude-downloaded-modules
 ```
 
@@ -19,4 +22,4 @@ Terraform and configured using Ansible.
 
 ## Autoscaling
 The [autoscaling folder](./autoscaling/README.md) contains Terraform code that
-manages an AWS ASG.
+will manage an AWS ASG. Very much in an early stage.
