@@ -28,7 +28,7 @@ variable "platform" {
   type        = string
   description = "EC2 VM platform"
   validation {
-    condition     = contains(["amazonlinux", "ubuntu"], var.platform)
+    condition     = contains(["amazonlinux2", "ubuntu"], var.platform)
     error_message = "Unsupported platform."
   }
   default = "ubuntu"

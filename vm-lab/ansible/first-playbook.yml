@@ -6,13 +6,19 @@
 - hosts: "tag_environment_{{ environment_name | replace('-', '_') }}:&tag_name_{{ deployment_name | replace('-', '_') }}"
   name: Exploratory tasks
   any_errors_fatal: true
+  remote_user: ubuntu
 
   vars:
     # All resources are tagged with this name. Aligned with the Terraform standard_tags var.
     deployment_name: vmlab
     instance_name: "{{ hostvars[inventory_hostname].tags.name }}"
 
+    # check ansible_facts.user_id, ansible_user_id
+
   tasks:
+    - ansible.builtin.fail:
+        msg: "Inventory is {{ hostvars[inventory_hostname] }}"
+
     - name: Set the hostname to the value of the 'name' tag
       become: yes
       ansible.builtin.hostname:
