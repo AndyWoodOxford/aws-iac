@@ -5,10 +5,6 @@
 #tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "logging" {
   bucket = "${local.account_id}-${var.name}-logging"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "logging" {
