@@ -2,9 +2,10 @@
 formatter: markdown table
 header-from: main.tf
 content: |-
-  # AWS Autoscaling.
+  # VM Lab
 
-  Experimentation with AWS autoscaling.
+  Refreshing my Terraform knowledge. Spin up EC2 instances inside a VPC. The tagging
+  will be used in an Ansible dynamic inventory.
 
   ## Table of Contents
 

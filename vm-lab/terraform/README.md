@@ -21,7 +21,7 @@ Experimentation with AWS autoscaling.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.100 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.5 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.5 |
 
 ## Inputs
@@ -42,7 +42,9 @@ Experimentation with AWS autoscaling.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | 6.4.0 |
 
 ## Resources
 

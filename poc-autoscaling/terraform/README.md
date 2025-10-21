@@ -14,7 +14,8 @@ Experimentation with AWS autoscaling.
 
 ## Overview
 
-
+**NB** Use the [bash wrapper](./terraform-init.sh) to initialise this folder - run with
+the `-h` option to view the usage message.
 
 ## Requirements
 

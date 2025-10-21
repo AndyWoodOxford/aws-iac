@@ -3,11 +3,23 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 # EC2
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "amazonlinux2" {
   owners      = ["amazon"]
   most_recent = true
 
   name_regex = "^amzn2-ami-hvm-2\\.\\d+\\..+$"
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+}
+
+data "aws_ami" "ubuntu" {
+  owners      = ["amazon"]
+  most_recent = true
+
+  name_regex = "^ubuntu/images/hvm-ssd-gp3/ubuntu-\\w+-\\d+.\\d+-amd64-server-\\d+$"
 
   filter {
     name   = "architecture"
@@ -29,7 +41,8 @@ data "aws_iam_policy" "AmazonCloudWatchAgentServerPolicy" {
 }
 
 # VPC
-data "aws_vpc" "default" {
-  default = true
+data "aws_availability_zones" "az" {
+  state = "available"
 }
+
 

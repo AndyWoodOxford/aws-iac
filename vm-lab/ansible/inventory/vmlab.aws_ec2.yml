@@ -1,0 +1,15 @@
+---
+plugin: amazon.aws.aws_ec2
+
+cache: yes
+cache_prefix: aws_ec2
+
+filters:
+  instance-state-name: running
+
+keyed_groups:
+  - prefix: tag
+    key: tags
+
+hostnames:
+  - ip-address
