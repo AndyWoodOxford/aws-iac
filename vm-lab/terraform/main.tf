@@ -1,9 +1,7 @@
 terraform {
   required_version = ">= 1.13.3"
 
-  backend "s3" {
-    key = local.remote_state_key
-  }
+  backend "s3" {}
 
   required_providers {
     aws = {

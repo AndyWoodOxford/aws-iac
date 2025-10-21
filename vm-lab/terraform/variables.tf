@@ -23,11 +23,6 @@ variable "name" {
   default = "vmlab"
 }
 
-variable "remote_state_key" {
-  type = string
-  description = "Used to key the remote state n S3 and DynamoDB"
-}
-
 # EC2
 variable "platform" {
   type        = string
@@ -64,7 +59,6 @@ variable "public_key_path" {
   description = "Path to the SSH public key file used to launch instances"
   default     = "~/.ssh/id_rsa.pub"
 }
-
 
 variable "vpc_cidr" {
   type        = string
