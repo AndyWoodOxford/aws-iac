@@ -1,4 +1,7 @@
 locals {
+  # Terraform remote state (S3 folder(s), DynamoDB table
+  remote_state_key = "vmlab"
+
   account_id = data.aws_caller_identity.current.account_id
 
   standard_tags = {

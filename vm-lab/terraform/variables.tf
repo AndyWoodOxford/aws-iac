@@ -23,6 +23,11 @@ variable "name" {
   default = "vmlab"
 }
 
+variable "remote_state_key" {
+  type = string
+  description = "Used to key the remote state n S3 and DynamoDB"
+}
+
 # EC2
 variable "platform" {
   type        = string

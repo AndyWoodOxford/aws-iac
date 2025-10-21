@@ -7,7 +7,9 @@ set -o pipefail
 function fn_usage() {
   echo
   echo "A wrapper for a \"terraform init\" command. S3 remote state is used with"
-  echo "DynamoDB state locking. The AWS region is ${AWS_REGION}."
+  echo "DynamoDB state locking. The S3 bucket and the DynamoDB table must exist"
+  echo -e "and both are named ${YELLOW}<ACCOUNT ID>-${REMOTE_STATE_SUFFIX}${RESET}."
+  echo -e "The AWS region is ${YELLOW}${AWS_REGION}${RESET}."
   echo
   echo "Usage: $0 [-h] KEY"
   echo
@@ -32,6 +34,8 @@ function fn_fail_if_unset() {
 
 ##### ENTRY
 AWS_REGION="eu-west-2"
+REMOTE_STATE_SUFFIX="terraform-remote-state"
+REMOTE_STATE_FILE="terraform.tfstate"
 
 BOLD="\033[1m"
 CYAN="\033[1;36m"
@@ -78,18 +82,18 @@ if [ "${dryrun}" = true ]
 then
   echo "This script is running in \"Dry Run\" mode. This command would have otherwise been executed:"
   echo -e "${YELLOW}terraform init \\ \n\
-  -backend-config=\"bucket=${ACCOUNT_ID}-terraform-remote-state\" \\ \n\
-  -backend-config=\"key=${remote_state_key}/terraform.tfstate\" \\ \n\
-  -backend-config=\"dynamodb_table=${ACCOUNT_ID}-terraform-remote-state\" \\ \n\
+  -backend-config=\"bucket=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX}\" \\ \n\
+  -backend-config=\"key=${remote_state_key}/${REMOTE_STATE_FILE}\" \\ \n\
+  -backend-config=\"dynamodb_table=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX} \\ \n\
   -backend-config=\"region=${AWS_REGION}\" \\ \n\
   -backend-config=\"encrypt=true\"\n\
   ${RESET}"
 else
-  terraform init -backend-config="bucket=${ACCOUNT_ID}-terraform-remote-state" \
-    -backend-config="key=${remote_state_key}/terraform.tfstate"                \
-    -backend-config="dynamodb_table=${ACCOUNT_ID}-terraform-remote-state"      \
+  terraform init -backend-config="bucket=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX}" \
+    -backend-config="key=${remote_state_key}/${REMOTE_STATE_FILE}"             \
+    -backend-config="dynamodb_table=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX}"      \
     -backend-config="region=${AWS_REGION}"                                     \
     -backend-config="encrypt=true"
 fi
 
-  exit 0
+exit 0
