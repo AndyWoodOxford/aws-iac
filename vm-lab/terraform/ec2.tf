@@ -8,7 +8,7 @@ resource "aws_key_pair" "launch" {
 resource "aws_instance" "vm" {
   count = var.instance_count
 
-  ami           = data.aws_ami.amazon_linux.id
+  ami           = local.ami_ids[var.platform]
   instance_type = var.instance_type
   key_name      = local.ec2_key_pair_name
 

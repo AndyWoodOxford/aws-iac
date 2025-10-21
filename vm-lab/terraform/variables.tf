@@ -24,10 +24,14 @@ variable "name" {
 }
 
 # EC2
-variable "public_key_path" {
+variable "platform" {
   type        = string
-  description = "Path to the SSH public key file used to launch instances"
-  default     = "~/.ssh/id_rsa.pub"
+  description = "EC2 VM platform"
+  validation {
+    condition     = contains(["amazonlinux", "ubuntu"], var.platform)
+    error_message = "Unsupported platform."
+  }
+  default = "ubuntu"
 }
 
 variable "instance_type" {
@@ -49,6 +53,13 @@ variable "instance_count" {
     error_message = "No more than 5 instances can be launched."
   }
 }
+
+variable "public_key_path" {
+  type        = string
+  description = "Path to the SSH public key file used to launch instances"
+  default     = "~/.ssh/id_rsa.pub"
+}
+
 
 variable "vpc_cidr" {
   type        = string
