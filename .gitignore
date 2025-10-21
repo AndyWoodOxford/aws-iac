@@ -12,5 +12,8 @@
 # do not ignore for team projects - for solo commits it pollutes the pr diff
 **/.terraform.lock.hcl
 
+# Ansible
+**/ansible.log
+
 # WIP
 **/*-tmp.sh

@@ -1,0 +1,26 @@
+---
+#------------------------------------------------------------------------------
+# Self-describing - simple tasks against AWS-hosted EC2 instances.
+#------------------------------------------------------------------------------
+
+- hosts: "tag_environment_{{ environment_name }}:&tag_name_{{ deployment_name }}"
+  name: Exploratory tasks
+  any_errors_fatal: true
+
+  vars:
+    # All resources are tagged with this name. Aligned with the Terraform standard_tags var.
+    deployment_name: vmlab
+    instance_name: "{{ hostvars[inventory_hostname].tags.name }}"
+
+  tasks:
+    - name: Set the hostname to the value of the 'name' tag
+      become: yes
+      ansible.builtin.hostname:
+        name: "{{ instance_name }}"
+        use: systemd
+
+    - name: Create Downloads folder
+      ansible.builtin.file:
+        name: "{{ ansible_env.HOME }}/Downloads/"
+        state: directory
+        mode: 0750
