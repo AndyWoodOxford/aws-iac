@@ -3,7 +3,7 @@
 # Self-describing - simple tasks against AWS-hosted EC2 instances.
 #------------------------------------------------------------------------------
 
-- hosts: "tag_environment_{{ environment_name }}:&tag_name_{{ deployment_name }}"
+- hosts: "tag_environment_{{ environment_name | replace('-', '_') }}:&tag_name_{{ deployment_name | replace('-', '_') }}"
   name: Exploratory tasks
   any_errors_fatal: true
 
