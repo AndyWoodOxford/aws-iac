@@ -11,12 +11,14 @@
   vars:
     # All resources are tagged with this name. Aligned with the Terraform standard_tags var.
     deployment_name: vmlab
+
+    # Used to set the prompt / hostname
     instance_name: "{{ hostvars[inventory_hostname].tags.name }}"
 
-    # check ansible_facts.user_id, ansible_user_id
+    # TODO check ansible_facts.user_id, ansible_user_id
 
   tasks:
-    - ansible.builtin.fail:
+    - ansible.builtin.debug:
         msg: "Inventory is {{ hostvars[inventory_hostname] }}"
 
     - name: Set the hostname to the value of the 'name' tag
