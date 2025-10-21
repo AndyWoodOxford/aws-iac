@@ -4,7 +4,7 @@
 #tfsec:ignore:aws-s3-enable-versioning
 #tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "logging" {
-  bucket = "${local.account_id}-${var.name_prefix}-logging"
+  bucket = "${local.account_id}-${var.name}-logging"
 
   lifecycle {
     prevent_destroy = true

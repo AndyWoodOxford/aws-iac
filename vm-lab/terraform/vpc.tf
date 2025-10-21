@@ -9,7 +9,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "6.4.0"
 
-  name = var.name_prefix
+  name = var.name
 
   cidr                 = var.vpc_cidr
   azs                  = data.aws_availability_zones.az.names
@@ -28,7 +28,7 @@ module "vpc" {
 }
 
 resource "aws_security_group" "vmlab" {
-  name        = var.name_prefix
+  name        = var.name
   description = "Allows Ansible to run"
   vpc_id      = module.vpc.vpc_id
 

@@ -39,6 +39,6 @@ resource "aws_kms_key_policy" "encryptor" {
 }
 
 resource "aws_kms_alias" "encryption_key" {
-  name          = "alias/${var.name_prefix}"
+  name          = "alias/${var.name}"
   target_key_id = aws_kms_key.encryptor.key_id
 }

@@ -1,9 +1,23 @@
 # General
-variable "name_prefix" {
+variable "environment" {
   type        = string
-  description = "Use this as a prefix for the Name tags on resources"
+  description = "The name of the environment, e.g. 'dev', 'example01'"
   validation {
-    condition     = var.name_prefix == lower(var.name_prefix)
+    condition     = length(var.environment) <= 12
+    error_message = "The maximum length of the 'environment_name' variable is 12 characters."
+  }
+  validation {
+    condition     = can(regex("^[a-z0-9]+$", var.environment))
+    error_message = "The 'environment_name' variable can contain only lower case letters or numbers."
+  }
+  default = "wip"
+}
+
+variable "name" {
+  type        = string
+  description = "All resources will use this as a Name, or as a prefix to the Name"
+  validation {
+    condition     = var.name == lower(var.name)
     error_message = "The resources cannot have upper case characters."
   }
   default = "vmlab"
@@ -29,7 +43,7 @@ variable "instance_type" {
 variable "instance_count" {
   type        = number
   description = "Number of instances"
-  default     = 1
+  default     = 2
   validation {
     condition     = var.instance_count <= 5
     error_message = "No more than 5 instances can be launched."

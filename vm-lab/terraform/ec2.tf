@@ -38,8 +38,8 @@ resource "aws_instance" "vm" {
     local.standard_tags,
     {
       Name = (var.instance_count > 1
-        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
-        : local.standard_tags["Name"]
+        ? format("%s-%d", local.standard_tags["name"], count.index + 1)
+        : local.standard_tags["name"]
       )
     }
   )
@@ -47,8 +47,8 @@ resource "aws_instance" "vm" {
   volume_tags = merge(local.standard_tags,
     {
       Name = (var.instance_count > 1
-        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
-        : local.standard_tags["Name"]
+        ? format("%s-%d", local.standard_tags["name"], count.index + 1)
+        : local.standard_tags["name"]
       )
     }
   )

@@ -1,6 +1,6 @@
 # Systems Manager SSM
 resource "aws_iam_role" "ssm" {
-  name = join("-", [var.name_prefix, "ssm"])
+  name = join("-", [var.name, "ssm"])
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 }
 
 resource "aws_iam_instance_profile" "ssm" {
-  name = join("-", [var.name_prefix, "-ssm"])
+  name = join("-", [var.name, "-ssm"])
   role = aws_iam_role.ssm.name
 
   tags = local.standard_tags
