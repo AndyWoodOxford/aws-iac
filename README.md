@@ -16,9 +16,9 @@ tflint
 tfsec --exclude-downloaded-modules
 ```
 
-## VM Lab
-A ["lab"](./vm-lab/README.md) of EC2 instances and related resources that will be provisioned by
-Terraform and configured using Ansible.
+## Ansible SSM
+A simple EC2 set-up with an Ansible playbook that connects over SSM instead of
+using the traditional `ssh` key pair.
 
 ## Autoscaling
 The [autoscaling folder](./autoscaling/README.md) contains Terraform code that
