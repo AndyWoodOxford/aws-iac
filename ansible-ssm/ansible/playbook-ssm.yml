@@ -21,3 +21,7 @@
   tasks:
     - ansible.builtin.debug:
         msg: Greetings from {{ hostvars[ ansible_host ][ 'public_ip_address' ] }}
+
+  post_tasks:
+    - ansible.builtin.debug:
+        msg: Goodbye from {{ hostvars[ ansible_host ][ 'public_ip_address' ] }}
