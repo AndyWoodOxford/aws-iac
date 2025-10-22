@@ -30,18 +30,18 @@ resource "aws_instance" "vm" {
   tags = merge(
     local.standard_tags,
     {
-      name = (var.instance_count > 1
-        ? format("%s-%d", local.standard_tags["name"], count.index + 1)
-        : local.standard_tags["name"]
+      Name = (var.instance_count > 1
+        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
+        : local.standard_tags["Name"]
       )
     }
   )
 
   volume_tags = merge(local.standard_tags,
     {
-      name = (var.instance_count > 1
-        ? format("%s-%d", local.standard_tags["name"], count.index + 1)
-        : local.standard_tags["name"]
+      Name = (var.instance_count > 1
+        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
+        : local.standard_tags["Name"]
       )
     }
   )

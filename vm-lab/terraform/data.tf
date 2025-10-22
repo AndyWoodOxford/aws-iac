@@ -27,10 +27,6 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-data "http" "localhost" {
-  url = "https://ipv4.icanhazip.com/"
-}
-
 # IAM
 data "aws_iam_policy" "AmazonSSMManagedInstanceCorePolicy" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"

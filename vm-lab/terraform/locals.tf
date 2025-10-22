@@ -12,7 +12,7 @@ locals {
   }
 
   standard_tags = {
-    name        = var.name
+    Name        = var.name
     environment = var.environment
     remote_user = local.remote_users[var.platform]
   }

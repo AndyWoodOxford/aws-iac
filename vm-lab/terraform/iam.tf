@@ -41,6 +41,11 @@ resource "aws_iam_policy" "ansible" {
   tags = local.standard_tags
 }
 
+resource "aws_iam_role_policy_attachment" "ansible" {
+  policy_arn = aws_iam_policy.ansible.arn
+  role       = aws_iam_role.ssm.name
+}
+
 resource "aws_iam_instance_profile" "ssm" {
   name = join("-", [var.name, "-ssm"])
   role = aws_iam_role.ssm.name
