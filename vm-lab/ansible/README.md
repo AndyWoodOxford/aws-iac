@@ -16,5 +16,5 @@ pip install -r requirements.txt
 E.g.
 ```shell
 # Terraform has set the 'environment' tag to 'wip'
-ansible-playbook -v -e environment_name=wip first-playbook.yml --list-hosts 
+ansible-playbook -v -e environment_name=wip playbook-ssm.yml --list-hosts 
 ```

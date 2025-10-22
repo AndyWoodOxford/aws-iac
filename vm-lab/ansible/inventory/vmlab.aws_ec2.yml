@@ -14,11 +14,6 @@ keyed_groups:
   - prefix: tag
     key: tags
 
-# Experimenting
-
-#hostnames:
-#  - ip-address
-
-compose:
-  ansible_host: ip-address
-  ansible_connection: 'amazon.aws.aws_ssm'
+hostnames:
+  - instance-id
+  - ip-address

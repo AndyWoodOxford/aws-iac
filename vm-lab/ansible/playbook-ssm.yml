@@ -9,12 +9,13 @@
   remote_user: ubuntu
 
   vars:
+    # Some of these would be passed in as extra-vars in an automated build
     ansible_connection: aws_ssm
-    ansible_aws_ssm_bucket_name: 730918948368-{{ category }}-ssm  # extra vars in a pipeline
+    ansible_aws_ssm_bucket_name: 730918948368-{{ category }}-ssm
     ansible_aws_ssm_region: eu-west-2
     ssm_timeout: 60
 
-    # Aligned with Terraform provider-level tags (pass in as extra vars in a pipeline)
+    # Aligned with Terraform provider-level tags
     application: iac
     category: vmlab
 
@@ -22,17 +23,11 @@
     instance_name: "{{ hostvars[inventory_hostname].tags.name }}"
 
   tasks:
-    - debug:
-        msg: FOO
+    - ansible.builtin.debug:
+        msg: Greetings from {{ hostvars[ ansible_host ][ 'public_ip_address' ] }}
 
     - name: Set the hostname to the value of the 'name' tag
       become: yes
       ansible.builtin.hostname:
         name: "{{ instance_name }}"
         use: systemd
-
-    - name: Create Downloads folder
-      ansible.builtin.file:
-        name: "{{ ansible_env.HOME }}/Downloads/"
-        state: directory
-        mode: 0750
