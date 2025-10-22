@@ -1,16 +1,9 @@
-# Launch key
-resource "aws_key_pair" "launch" {
-  key_name   = local.ec2_key_pair_name
-  public_key = file(var.public_key_path)
-}
-
 # Instance
 resource "aws_instance" "vm" {
   count = var.instance_count
 
   ami           = local.ami_ids[var.platform]
   instance_type = var.instance_type
-  key_name      = local.ec2_key_pair_name
 
   root_block_device {
     volume_type           = "gp3"

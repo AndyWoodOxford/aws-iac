@@ -1,6 +1,9 @@
 ---
 plugin: amazon.aws.aws_ec2
 
+regions:
+  - eu-west-2
+
 cache: yes
 cache_prefix: aws_ec2
 
@@ -11,5 +14,11 @@ keyed_groups:
   - prefix: tag
     key: tags
 
-hostnames:
-  - ip-address
+# Experimenting
+
+#hostnames:
+#  - ip-address
+
+compose:
+  ansible_host: ip-address
+  ansible_connection: 'amazon.aws.aws_ssm'

@@ -54,13 +54,3 @@ resource "aws_vpc_security_group_egress_rule" "https" {
 
   tags = local.standard_tags
 }
-
-resource "aws_vpc_security_group_ingress_rule" "ansible" {
-  cidr_ipv4         = "${local.control_host_ipv4}/32"
-  from_port         = 22
-  to_port           = 22
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.vmlab.id
-
-  tags = local.standard_tags
-}

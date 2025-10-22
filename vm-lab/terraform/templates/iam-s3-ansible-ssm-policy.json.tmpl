@@ -1,0 +1,28 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowSSMAccess",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetConnectionStatus",
+                "ssm:ResumeSession",
+                "ec2:DescribeInstances",
+                "ssm:DescribeSessions",
+                "ssm:TerminateSession",
+                "ssm:StartSession"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowAnsibleS3BucketAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": "arn:aws:s3:::${bucket}/*"
+        }
+    ]
+}
