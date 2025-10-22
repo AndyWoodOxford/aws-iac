@@ -12,11 +12,8 @@ locals {
   }
 
   standard_tags = {
-    name        = var.name
+    Name        = var.name
     environment = var.environment
     remote_user = local.remote_users[var.platform]
   }
-
-  control_host_ipv4 = chomp(data.http.localhost.response_body)
-  ec2_key_pair_name = var.name
 }

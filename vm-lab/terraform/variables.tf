@@ -54,12 +54,6 @@ variable "instance_count" {
   }
 }
 
-variable "public_key_path" {
-  type        = string
-  description = "Path to the SSH public key file used to launch instances"
-  default     = "~/.ssh/id_rsa.pub"
-}
-
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the non-default VPC"

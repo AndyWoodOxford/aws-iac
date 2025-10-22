@@ -1,6 +1,9 @@
 ---
 plugin: amazon.aws.aws_ec2
 
+regions:
+  - eu-west-2
+
 cache: yes
 cache_prefix: aws_ec2
 
@@ -12,4 +15,5 @@ keyed_groups:
     key: tags
 
 hostnames:
+  - instance-id
   - ip-address
