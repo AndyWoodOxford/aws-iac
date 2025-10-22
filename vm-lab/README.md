@@ -1,11 +1,6 @@
-# VM Lab
-AWS resources that are provisioned using Terraform, with the EC2 instances
-configured using Ansible.
+# Ansible and SSM Connections
+AWS resources that are provisioned using Terraform and a simple Ansible
+playbook that connects using AWS Systems Manager `ssm`.
 
-The [README](./terraform/README.md) is managed by `terraform-docs`:
-```shell
-brew install terraform-docs
-
-cd terraform
-terraform-docs markdown --config=.terraform-docs.yml .
-```
+See the [Ansible](./ansible/README.md) and [Terraform](./terraform/README.md)
+READMEs for more info.
