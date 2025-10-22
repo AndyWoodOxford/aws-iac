@@ -6,7 +6,6 @@
 - hosts: "tag_application_{{ application | replace('-', '_') }}:&tag_category_{{ category | replace('-', '_') }}"
   name: Exploratory tasks
   any_errors_fatal: true
-  remote_user: ubuntu
 
   vars:
     # Some of these would be passed in as extra-vars in an automated build
@@ -19,15 +18,6 @@
     application: iac
     category: vmlab
 
-    # Used to set the prompt / hostname
-    instance_name: "{{ hostvars[inventory_hostname].tags.name }}"
-
   tasks:
     - ansible.builtin.debug:
         msg: Greetings from {{ hostvars[ ansible_host ][ 'public_ip_address' ] }}
-
-    - name: Set the hostname to the value of the 'name' tag
-      become: yes
-      ansible.builtin.hostname:
-        name: "{{ instance_name }}"
-        use: systemd
