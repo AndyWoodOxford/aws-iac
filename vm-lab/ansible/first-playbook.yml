@@ -3,14 +3,15 @@
 # Self-describing - simple tasks against AWS-hosted EC2 instances.
 #------------------------------------------------------------------------------
 
-- hosts: "tag_environment_{{ environment_name | replace('-', '_') }}:&tag_name_{{ deployment_name | replace('-', '_') }}"
+- hosts: "tag_application_{{ application | replace('-', '_') }}:&tag_category_{{ category | replace('-', '_') }}"
   name: Exploratory tasks
   any_errors_fatal: true
   remote_user: ubuntu
 
   vars:
-    # All resources are tagged with this name. Aligned with the Terraform standard_tags var.
-    deployment_name: vmlab
+    # Aligned with Terraform provider-level tags (pass in as extra vars in a pipeline)
+    application: iac
+    category: vmlab
 
     # Used to set the prompt / hostname
     instance_name: "{{ hostvars[inventory_hostname].tags.name }}"
@@ -18,9 +19,6 @@
     # TODO check ansible_facts.user_id, ansible_user_id
 
   tasks:
-    - ansible.builtin.debug:
-        msg: "Inventory is {{ hostvars[inventory_hostname] }}"
-
     - name: Set the hostname to the value of the 'name' tag
       become: yes
       ansible.builtin.hostname:
