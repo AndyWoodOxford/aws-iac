@@ -2,14 +2,19 @@
 formatter: markdown table
 header-from: main.tf
 content: |-
-  # VM Lab
+  # Basic EC2 Set-up
   
-  **DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`. Instead
-  edit the `.terraform-docs.yml` file and run `tdocs='terraform-docs markdown --config=.terraform-docs.yml .'`.
-
-  Refreshing my Terraform knowledge. Spin up EC2 instances inside a VPC. The instances
-  will be part of an Ansible dynamic inventory.
-
+  **DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`:
+  
+  ```shell
+  brew install terraform-docs
+  
+  cd terraform
+  terraform-docs markdown --config=.terraform-docs.yml .
+  ```
+  
+  Instead edit the `.terraform-docs.yml` file and run the commands above. 
+  
   ## Table of Contents
 
   - [Overview][1]
@@ -22,7 +27,7 @@ content: |-
 
   ## Overview
   
-  The `name` and `environment` [variables](./variables.tf) are used in the Ansible
+  The `application` and `environment` [variables](./variables.tf) are used in the Ansible
   dynamic inventory to identify the hosts.
   
   **NB** I reduced typing by defining these aliases in my `.zprofile`:
