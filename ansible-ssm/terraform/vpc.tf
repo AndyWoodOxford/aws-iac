@@ -26,31 +26,3 @@ module "vpc" {
 
   tags = local.standard_tags
 }
-
-resource "aws_security_group" "vmlab" {
-  name        = var.name
-  description = "Allows Ansible to run"
-  vpc_id      = module.vpc.vpc_id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_egress_rule" "http" {
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 80
-  to_port           = 80
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.vmlab.id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_egress_rule" "https" {
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  to_port           = 443
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.vmlab.id
-
-  tags = local.standard_tags
-}

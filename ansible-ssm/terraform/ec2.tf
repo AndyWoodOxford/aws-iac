@@ -15,8 +15,6 @@ resource "aws_instance" "vm" {
   associate_public_ip_address = true
   subnet_id                   = module.vpc.public_subnets[count.index % length(module.vpc.public_subnets)]
 
-  vpc_security_group_ids = [aws_security_group.vmlab.id]
-
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
   lifecycle {
