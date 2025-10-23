@@ -2,7 +2,7 @@
 formatter: markdown table
 header-from: main.tf
 content: |-
-  # Basic EC2 Set-up.
+  # Basic EC2 Set-up
   
   **DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`:
   
@@ -26,9 +26,6 @@ content: |-
   - [Resources][7]
 
   ## Overview
-  
-  Ubuntu or AmazonLinux2 instance(s) in private subnets, with an IAM profile that allows `ssm`
-  connections.
   
   The `application` and `environment` [variables](./variables.tf) are used in the Ansible
   dynamic inventory to identify the hosts.
