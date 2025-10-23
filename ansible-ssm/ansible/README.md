@@ -13,6 +13,8 @@ variable, e.g.
 ansible-playbook -v --extra-vars environment_name=wip playbook-ssm.yml --list-hosts 
 ansible-playbook -vv -e environment_name=wip playbook-ssm.yml
 ```
+**NB** my account ids are managed by `ansible-vault` :-)
+
 
 Run the playbook(s) inside a virtual environment:
 ```shell
