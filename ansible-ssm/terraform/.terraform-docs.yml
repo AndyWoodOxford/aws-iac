@@ -27,6 +27,9 @@ content: |-
 
   ## Overview
   
+  Ubuntu or AmazonLinux2 instance(s) in private subnets, with an IAM profile that allows `ssm`
+  connections.
+  
   The `application` and `environment` [variables](./variables.tf) are used in the Ansible
   dynamic inventory to identify the hosts.
   
