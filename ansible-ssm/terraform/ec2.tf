@@ -12,10 +12,8 @@ resource "aws_instance" "vm" {
     delete_on_termination = true
   }
 
-  associate_public_ip_address = true
-  subnet_id                   = module.vpc.public_subnets[count.index % length(module.vpc.public_subnets)]
-
-  vpc_security_group_ids = [aws_security_group.vmlab.id]
+  associate_public_ip_address = false
+  subnet_id                   = module.vpc.private_subnets[count.index % length(module.vpc.private_subnets)]
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
 
