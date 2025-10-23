@@ -1,10 +1,6 @@
 ---
-#------------------------------------------------------------------------------
-# Self-describing - simple tasks against AWS-hosted EC2 instances.
-#------------------------------------------------------------------------------
-
-- hosts: "tag_application_{{ application | replace('-', '_') }}:&tag_category_{{ category | replace('-', '_') }}"
-  name: Exploratory tasks
+- name: Simple playbook to demonstrate a connection over SSM
+  hosts: "tag_application_{{ application | replace('-', '_') }}:&tag_category_{{ category | replace('-', '_') }}"
   any_errors_fatal: true
 
   vars:
@@ -19,9 +15,11 @@
     category: vmlab
 
   tasks:
-    - ansible.builtin.debug:
-        msg: Greetings from {{ hostvars[ ansible_host ][ 'public_ip_address' ] }}
+    - name: Say hello - ansible-lint will complain if a task does not have a name
+      ansible.builtin.debug:
+        msg: Greetings from {{ hostvars[ansible_host]['public_ip_address'] }}
 
   post_tasks:
-    - ansible.builtin.debug:
-        msg: Goodbye from {{ hostvars[ ansible_host ][ 'public_ip_address' ] }}
+    - name: Say goodbye
+      ansible.builtin.debug:
+        msg: Goodbye from {{ hostvars[ansible_host]['public_ip_address'] }}
