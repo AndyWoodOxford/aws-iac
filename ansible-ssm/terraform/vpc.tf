@@ -1,8 +1,11 @@
 locals {
   availability_zones = data.aws_availability_zones.az.names
 
+  private_subnets_ipv4 = [
+  for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i)]
+
   public_subnets_ipv4 = [
-  for i in range(0, length(local.availability_zones) * 2, 2) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i)]
+  for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
 }
 
 module "vpc" {
@@ -11,8 +14,16 @@ module "vpc" {
 
   name = var.name
 
-  cidr                 = var.vpc_cidr
-  azs                  = data.aws_availability_zones.az.names
+  cidr = var.vpc_cidr
+  azs  = data.aws_availability_zones.az.names
+
+  private_subnets       = local.private_subnets_ipv4
+  private_subnet_suffix = "private"
+  private_subnet_tags = {
+    SubnetUsage = "private"
+  }
+  enable_nat_gateway = true
+
   public_subnets       = local.public_subnets_ipv4
   public_subnet_suffix = "public"
   public_subnet_tags = {
