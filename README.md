@@ -1,11 +1,8 @@
 # aws-iac
 Refreshers for Terraform, Ansible etc.
 
-All the Terraform directories use an S3 remote backend (with DynamoDB managing
-the state locks).
-
-Assumptions:
-* the S3 bucket and DynamoDB table must exist (check the script for the names)
+All the Terraform directories use an S3 remote backend:
+* the S3 bucket must exist (check the script for the naming convention)
 * the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables must be defined and permit appropriate privileges
 
 I have used the following to statically check the code:

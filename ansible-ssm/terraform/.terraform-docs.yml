@@ -30,8 +30,18 @@ content: |-
   Ubuntu or AmazonLinux2 instance(s) in private subnets, with an IAM profile that allows `ssm`
   connections.
   
+  ```
+  ./scripts/terraform-init.sh remote-state-key
+  terraform plan -out tf.plan
+  terraform apply tf.plan
+  ...
+  terraform destroy
+  ```
+  
   The `application` and `environment` [variables](./variables.tf) are used in the Ansible
   dynamic inventory to identify the hosts.
+  
+  The bash scripts have been checked using `shellcheck` (installed on MacOS using Homebrew).
   
   **NB** I reduced typing by defining these aliases in my `.zprofile`:
   ```shell

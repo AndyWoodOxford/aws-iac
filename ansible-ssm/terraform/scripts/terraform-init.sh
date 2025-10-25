@@ -7,8 +7,8 @@ set -o pipefail
 function fn_usage() {
   echo
   echo "A wrapper for a \"terraform init\" command. S3 remote state is used with"
-  echo "DynamoDB state locking. The S3 bucket and the DynamoDB table must exist"
-  echo -e "and both are named ${YELLOW}<ACCOUNT ID>-${REMOTE_STATE_SUFFIX}${RESET}."
+  echo "native state locking. The S3 bucket must exist and this script assumes that"
+  echo -e "the name is ${YELLOW}<ACCOUNT ID>-${REMOTE_STATE_SUFFIX}${RESET}."
   echo -e "The AWS region is ${YELLOW}${AWS_REGION}${RESET}."
   echo
   echo "Usage: $0 [-h] KEY"
@@ -18,7 +18,7 @@ function fn_usage() {
   echo "  -h       Show this usage message and exit"
   echo
   echo -e "${CYAN}Positional arguments${RESET}"
-  echo -e "  ${BOLD}KEY${RESET}      Key for Terraform remote state (S3 folder/DynamoDB item)"
+  echo -e "  ${BOLD}KEY${RESET}      Key for the Terraform remote state"
   echo
 }
 
@@ -84,16 +84,16 @@ then
   echo -e "${YELLOW}terraform init \\ \n\
   -backend-config=\"bucket=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX}\" \\ \n\
   -backend-config=\"key=${remote_state_key}/${REMOTE_STATE_FILE}\" \\ \n\
-  -backend-config=\"dynamodb_table=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX} \\ \n\
   -backend-config=\"region=${AWS_REGION}\" \\ \n\
-  -backend-config=\"encrypt=true\"\n\
+  -backend-config=\"encrypt=true\" \\ \n\
+  -backend-config=\"use_lockfile=true\" \n\
   ${RESET}"
 else
   terraform init -backend-config="bucket=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX}" \
     -backend-config="key=${remote_state_key}/${REMOTE_STATE_FILE}"             \
-    -backend-config="dynamodb_table=${ACCOUNT_ID}-${REMOTE_STATE_SUFFIX}"      \
     -backend-config="region=${AWS_REGION}"                                     \
-    -backend-config="encrypt=true"
+    -backend-config="encrypt=true"                                             \
+    -backend-config="use_lockfile=true"
 fi
 
 exit 0

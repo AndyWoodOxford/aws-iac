@@ -7,7 +7,7 @@
 # Terraform
 **/.terraform
 **/*.tfplan
-**/tfplan.*
+**/tf.plan
 
 # do not ignore for team projects - for solo commits it pollutes the pr diff
 **/.terraform.lock.hcl
