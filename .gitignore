@@ -17,4 +17,5 @@
 **/.vault-password
 
 # WIP
+**/wip-*
 **/*-tmp.sh
