@@ -16,7 +16,3 @@ tfsec --exclude-downloaded-modules
 ## Ansible SSM
 A simple EC2 set-up with an Ansible playbook that connects over SSM instead of
 using the traditional `ssh` key pair.
-
-## Autoscaling
-The [autoscaling folder](./autoscaling/README.md) contains Terraform code that
-will manage an AWS ASG. Very much in an early stage.
