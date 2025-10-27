@@ -3,11 +3,11 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 # EC2
-data "aws_ami" "amazonlinux2" {
+data "aws_ami" "debian13" {
   owners      = ["amazon"]
   most_recent = true
 
-  name_regex = "^amzn2-ami-hvm-2\\.\\d+\\..+$"
+  name_regex = "^debian-13-amd64-\\d+-\\d+$"
 
   filter {
     name   = "architecture"
