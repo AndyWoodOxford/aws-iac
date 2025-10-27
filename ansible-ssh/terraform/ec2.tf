@@ -1,6 +1,6 @@
 resource "aws_security_group" "vm" {
-  name        = "${var.name}-egress"
-  description = "Allow egress for system updates etc"
+  name        = "${var.name}-${var.environment}"
+  description = "Allow system updates and Ansible access"
   vpc_id      = module.vpc.vpc_id
 
   tags = local.standard_tags
@@ -59,7 +59,7 @@ resource "aws_instance" "vm" {
   }
 
   associate_public_ip_address = true
-  subnet_id                   = module.vpc.private_subnets[count.index % length(module.vpc.private_subnets)]
+  subnet_id                   = module.vpc.public_subnets[count.index % length(module.vpc.public_subnets)]
 
   vpc_security_group_ids = [
     aws_security_group.vm.id
