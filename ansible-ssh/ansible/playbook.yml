@@ -4,8 +4,8 @@
   any_errors_fatal: true
 
   vars:
-    # Aligned with Terraform provider-level tags
-    application: ansible-ssh
+    application: ansible-ssh  # Aligned with Terraform provider-level tags
+    instance_tag_name: "{{ hostvars[inventory_hostname].tags.Name }}"
 
   pre_tasks:
     - name: Ping the hosts
@@ -15,6 +15,12 @@
     - name: Say hello - ansible-lint will complain if a task does not have a name
       ansible.builtin.debug:
         msg: Greetings from {{ hostvars[ansible_host]['public_ip_address'] }}
+
+    - name: Set the hostname to that of the Name tag
+      become: yes
+      ansible.builtin.hostname:
+        name: "{{ instance_tag_name }}"
+        use: systemd
 
   post_tasks:
     - name: Say goodbye
