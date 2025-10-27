@@ -17,7 +17,7 @@
         msg: Greetings from {{ hostvars[ansible_host]['public_ip_address'] }}
 
     - name: Set the hostname to that of the Name tag
-      become: yes
+      become: true
       ansible.builtin.hostname:
         name: "{{ instance_tag_name }}"
         use: systemd
