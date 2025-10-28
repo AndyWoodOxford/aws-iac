@@ -1,4 +1,3 @@
-# General
 variable "environment" {
   type        = string
   description = "The name of the environment, e.g. 'dev', 'example01'"
@@ -10,6 +9,7 @@ variable "environment" {
     condition     = can(regex("^[a-z0-9]+$", var.environment))
     error_message = "The 'environment_name' variable can contain only lower case letters or numbers."
   }
+  default = ""
 }
 
 variable "name" {
@@ -19,6 +19,13 @@ variable "name" {
     condition     = var.name == lower(var.name)
     error_message = "The resources cannot have upper case characters."
   }
+  default = ""
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Add these tags to all resources"
+  default     = {}
 }
 
 # EC2
@@ -44,21 +51,23 @@ variable "instance_type" {
 variable "instance_count" {
   type        = number
   description = "Number of instances"
-  default     = 1
   validation {
     condition     = var.instance_count <= 5
     error_message = "No more than 5 instances can be launched."
   }
+  default = 1
 }
 
 variable "public_key_path" {
   type        = string
   description = "Path to the SSH public key file used to launch the instances"
+  default     = null
 }
 
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the non-default VPC"
+  default     = "10.0.0.0/16"
 }
 
 variable "subnet_cidr_mask" {
