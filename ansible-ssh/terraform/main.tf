@@ -9,3 +9,7 @@ provider "aws" {
     }
   }
 }
+
+module "resources" {
+  source = ""
+}

@@ -7,3 +7,8 @@ output "nat_gateway" {
   description = "NAT gateway id"
   value       = module.vpc.natgw_ids
 }
+
+output "vpc_id" {
+  description = "VPC id"
+  value = module.vpc.vpc_id
+}

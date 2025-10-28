@@ -1,6 +1,6 @@
 ---
 formatter: markdown table
-header-from: main.tf
+header_from: main.tf
 
 content: |-
   ## Table of Contents

@@ -5,5 +5,10 @@ output "instances_ipv4" {
 
 output "nat_gateway" {
   description = "NAT gateway id"
-  value       = module.vpc.natgw_ids
+  value       = module
+}
+
+output "vpc_id" {
+  description = "VPC id"
+  value = module.vpc.vpc_id
 }

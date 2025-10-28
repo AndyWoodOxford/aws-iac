@@ -1,21 +1,8 @@
-**DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`!
-Instead edit the `.terraform-docs.yml` file and run the commands above.
-
-## Table of Contents
-
-- [Overview][1]
-- [Example Input][2]
-- [Requirements][3]
-- [Inputs][4]
-- [Outputs][5]
-- [Modules][6]
-- [Resources][7]
-
 ## Overview
 
-A VPC containing EC2 instances in public subnets. Port 22 is open to allow Ansible to
+A VPC containing EC2 instance(s) in public subnets. Port 22 is open to allow Ansible to
 connect over `ssh` from the control host (currently localhost). The instances can be
-connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.  
+connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.
 ```
 ./scripts/terraform-init.sh remote-state-key
 terraform plan -out tf.plan
@@ -37,6 +24,18 @@ alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
 alias tfsec="tfsec --exclude-downloaded-modules"
 ```
 
+
+
+<!-- BEGIN_TF_DOCS -->
+## Table of Contents
+
+- [Overview][1]
+- [Example Input][2]
+- [Requirements][3]
+- [Inputs][4]
+- [Outputs][5]
+- [Modules][6]
+- [Resources][7]
 
 
 ## Requirements
@@ -112,3 +111,5 @@ alias tfsec="tfsec --exclude-downloaded-modules"
 [5]: #outputs
 [6]: #modules
 [7]: #resources
+
+<!-- END_TF_DOCS -->
