@@ -24,8 +24,6 @@ alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
 alias tfsec="tfsec --exclude-downloaded-modules"
 ```
 
-
-
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents
 
