@@ -20,7 +20,3 @@ using the traditional `ssh` key pair.
 ## Ansible SSH
 A more traditional EC2 set up with Ansible connecting over `ssh`. The Terraform will
 later become a module.
-
-## Autoscaling
-The [autoscaling folder](./autoscaling/README.md) contains Terraform code that
-will manage an AWS ASG. Very much in an early stage.

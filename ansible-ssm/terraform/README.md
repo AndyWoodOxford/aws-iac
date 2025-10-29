@@ -1,30 +1,20 @@
-# Basic EC2 Set-up
+# AWS Resources
 
-**DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`:
+AWS resources to act as targets for an [Ansible playbook](../ansible/playbook-ssm.yml)
+that connects over SSM. The EC2 instances use either Ubuntu or Debian AMIs.
 
-```shell
-brew install terraform-docs
+## Usage
 
-cd terraform
-terraform-docs markdown --config=.terraform-docs.yml .
 ```
-
-Instead edit the `.terraform-docs.yml` file and run the commands above. 
-
-## Table of Contents
-
-- [Overview][1]
-- [Example Input][2]
-- [Requirements][3]
-- [Inputs][4]
-- [Outputs][5]
-- [Modules][6]
-- [Resources][7]
-
-## Overview
+./scripts/terraform-init.sh remote-state-key
+terraform plan -out tf.plan
+terraform apply tf.plan
+```
 
 The `application` and `environment` [variables](./variables.tf) are used in the Ansible
 dynamic inventory to identify the hosts.
+
+The bash scripts have been checked using `shellcheck` (installed on MacOS using Homebrew).
 
 **NB** I reduced typing by defining these aliases in my `.zprofile`:
 ```shell
@@ -33,6 +23,15 @@ alias tfmt='terraform fmt --recursive'
 alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
 alias tfsec="tfsec --exclude-downloaded-modules"
 ```
+
+<!-- BEGIN_TF_DOCS -->
+## Table of Contents
+
+- [Requirements][1]
+- [Inputs][2]
+- [Outputs][3]
+- [Modules][4]
+- [Resources][5]
 
 
 
@@ -60,6 +59,7 @@ alias tfsec="tfsec --exclude-downloaded-modules"
 | Name | Description |
 |------|-------------|
 | <a name="output_instances_ipv4"></a> [instances\_ipv4](#output\_instances\_ipv4) | IPV4 addresses of the instance(s) |
+| <a name="output_nat_gateway"></a> [nat\_gateway](#output\_nat\_gateway) | NAT gateway id |
 
 ## Modules
 
@@ -89,9 +89,6 @@ alias tfsec="tfsec --exclude-downloaded-modules"
 | [aws_s3_bucket_public_access_block.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [aws_security_group.vmlab](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_vpc_security_group_egress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
-| [aws_vpc_security_group_egress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
 | [aws_ami.amazonlinux2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_ami.ubuntu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_availability_zones.az](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
@@ -101,10 +98,9 @@ alias tfsec="tfsec --exclude-downloaded-modules"
 | [aws_iam_policy_document.logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
-[1]: #overview
-[2]: #example-input
-[3]: #requirements
-[4]: #inputs
-[5]: #outputs
-[6]: #modules
-[7]: #resources
+[1]: #requirements
+[2]: #inputs
+[3]: #outputs
+[4]: #modules
+[5]: #resources
+<!-- END_TF_DOCS -->
