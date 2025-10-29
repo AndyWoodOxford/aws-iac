@@ -51,7 +51,7 @@ tasks:
   tplan:
     desc: Create a Terraform plan (local state)
     dir: terraform
-    env:
+    vars:
       ENV: '{{ .ENVIRONMENT | default "envname" }}'
     cmds:
       - task: tinit
