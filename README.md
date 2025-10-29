@@ -1,7 +1,7 @@
 # aws-iac
 Refreshers for Terraform, Ansible etc.
 
-All the Terraform directories use an S3 remote backend:
+Some of the Terraform directories use an S3 remote backend:
 * the S3 bucket must exist (check the script for the naming convention)
 * the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables must be defined and permit appropriate privileges
 
@@ -13,10 +13,17 @@ tflint
 tfsec --exclude-downloaded-modules
 ```
 
+**NB** Some projects also include a [Taskfile](https://taskfile.dev/) with tasks
+that wrap common commands.
+
+## Ansible SSH
+A traditional EC2 set up with Ansible connecting over `ssh`. The Terraform will
+later become a module.
+
 ## Ansible SSM
 A simple EC2 set-up with an Ansible playbook that connects over SSM instead of
 using the traditional `ssh` key pair.
 
-## Ansible SSH
-A more traditional EC2 set up with Ansible connecting over `ssh`. The Terraform will
-later become a module.
+## Terraform/modules
+A module to create a "VM Lab", suitable for running the Ansible playbooks.
+
