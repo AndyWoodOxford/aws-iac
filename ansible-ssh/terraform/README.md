@@ -1,48 +1,26 @@
-# Basic EC2 Set-up
-
-**DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`:
-
-```shell
-brew install terraform-docs
-
-cd terraform
-terraform-docs markdown --config=.terraform-docs.yml .
-```
-
-Instead edit the `.terraform-docs.yml` file and run the commands above.
-
-## Table of Contents
-
-- [Overview][1]
-- [Example Input][2]
-- [Requirements][3]
-- [Inputs][4]
-- [Outputs][5]
-- [Modules][6]
-- [Resources][7]
-
 ## Overview
 
-A VPC containing EC2 instances in public subnets. Port 22 is open to allow Ansible to
+A VPC containing 2 EC2 instances in public subnets. Port 22 is open to allow Ansible to
 connect over `ssh` from the control host (currently localhost). The instances can be
 connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.
+The state is managed in an S3 backend.
 
-An S3 remote back end is used.
+The Ansible dynamic inventory matches the `application` and `environment` tags.
 
-```
-./scripts/terraform-init.sh remote-state-key
-terraform plan -out tf.plan
-terraform apply tf.plan
-...
-terraform destroy
-```
+## Usage
+To run this example you need to execute:
 
-The `application` and `environment` [variables](./variables.tf) are used in the Ansible
-dynamic inventory to identify the hosts.
+```bash
+$ ./scripts/terraform-init "remote/state/key"
+$ terraform plan
+$ terraform apply
+ ```
 
-The bash scripts have been checked using `shellcheck` (installed on MacOS using Homebrew).
+Run `terraform destroy` to clean up.
 
-**NB** I reduced typing by defining these aliases in my `.zprofile`:
+## Tips
+
+I reduced typing by defining these aliases in my `.zprofile`:
 ```shell
 alias tdocs='terraform-docs markdown --config=.terraform-docs.yml .'
 alias tfmt='terraform fmt --recursive'
@@ -50,11 +28,23 @@ alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
 alias tfsec="tfsec --exclude-downloaded-modules"
 ```
 
+<!-- BEGIN_TF_DOCS -->
+## Table of Contents
+
+- [Requirements][1]
+- [Inputs][2]
+- [Outputs][3]
+- [Modules][4]
+- [Resources][5]
+
 
 
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.5 |
 
 ## Inputs
 
@@ -63,30 +53,30 @@ No requirements.
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment, e.g. 'dev', 'example01' | `string` | `"example"` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances | `number` | `2` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance | `string` | `"t2.micro"` | no |
-| <a name="input_name"></a> [name](#input\_name) | All resources will use this lowercase var as a Name, or as a prefix to the Name | `string` | `"vmlab"` | no |
-| <a name="input_platform"></a> [platform](#input\_platform) | EC2 VM platform | `string` | `"ubuntu"` | no |
 | <a name="input_public_key_path"></a> [public\_key\_path](#input\_public\_key\_path) | Path to the SSH public key file used to launch the instances | `string` | `"~/.ssh/id_rsa.pub"` | no |
-| <a name="input_subnet_cidr_mask"></a> [subnet\_cidr\_mask](#input\_subnet\_cidr\_mask) | CIDR mask, e.g. /27 gives 27 (32 - 5)usable addresses | `number` | `27` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR block for the non-default VPC | `string` | `"10.10.0.0/16"` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_control_host"></a> [control\_host](#output\_control\_host) | IPV4 of the control host (whitelisted on port 22) |
+| <a name="output_instances_ipv4"></a> [instances\_ipv4](#output\_instances\_ipv4) | IPV4 addresses of the instance(s) |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_resources"></a> [resources](#module\_resources) |  | n/a |
+| <a name="module_resources"></a> [resources](#module\_resources) | ./modules/vmlab | n/a |
 
 ## Resources
 
 No resources.
 
-[1]: #overview
-[2]: #example-input
-[3]: #requirements
-[4]: #inputs
-[5]: #outputs
-[6]: #modules
-[7]: #resources
+[1]: #requirements
+[2]: #inputs
+[3]: #outputs
+[4]: #modules
+[5]: #resources
+<!-- END_TF_DOCS -->
+
