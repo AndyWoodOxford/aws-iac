@@ -3,13 +3,30 @@
 version: '3'
 
 tasks:
-  tlint:
-    desc: Test the Terraform config for formatting, validity and linting
+  default:
+    desc: Execute all of the static checks on the Terraform code
+    deps: [tvalid]
+
+  tclean:
+    desc: Cleans the downloaded modules, providers and the lock file
+    dir: terraform
+    cmds:
+      - rm -rf .terraform/
+      - rm -f .terraform.lock.hcl
+
+  tvalid:
+    desc: Validates the Terraform including a format check
     dir: terraform
     cmds:
       - terraform init -backend=false -upgrade
       - terraform fmt -recursive -diff
       - terraform validate
+
+  tlint:
+    desc: Test the Terraform config for formatting, validity and linting
+    dir: terraform
+    cmds:
+      - terraform init -backend=false -upgrade
       - tflint
 
   tsec:
@@ -47,3 +64,11 @@ tasks:
     dir: ansible
     cmds:
       - ansible-lint -v playbook.yml
+
+  playbook:
+    desc: Execute the Ansible playbook
+    dir: ansible
+    cmds:
+      - source ./venv/bin/execute
+      - pip install -r requirements.txt
+      - ansible-playbook -v --extra-vars environment_name=example --user ubuntu playbook.yml
