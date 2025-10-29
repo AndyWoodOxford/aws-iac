@@ -1,55 +1,15 @@
 ---
 formatter: markdown table
 header-from: main.tf
+
 content: |-
-  # Basic EC2 Set-up
-  
-  **DO NOT EDIT THE README.md file** - this is managed by `terraform-docs`:
-  
-  ```shell
-  brew install terraform-docs
-  
-  cd terraform
-  terraform-docs markdown --config=.terraform-docs.yml .
-  ```
-  
-  Instead edit the `.terraform-docs.yml` file and run the commands above. 
-  
   ## Table of Contents
 
-  - [Overview][1]
-  - [Example Input][2]
-  - [Requirements][3]
-  - [Inputs][4]
-  - [Outputs][5]
-  - [Modules][6]
-  - [Resources][7]
-
-  ## Overview
-  
-  Ubuntu or AmazonLinux2 instance(s) in private subnets, with an IAM profile that allows `ssm`
-  connections.
-  
-  ```
-  ./scripts/terraform-init.sh remote-state-key
-  terraform plan -out tf.plan
-  terraform apply tf.plan
-  ...
-  terraform destroy
-  ```
-  
-  The `application` and `environment` [variables](./variables.tf) are used in the Ansible
-  dynamic inventory to identify the hosts.
-  
-  The bash scripts have been checked using `shellcheck` (installed on MacOS using Homebrew).
-  
-  **NB** I reduced typing by defining these aliases in my `.zprofile`:
-  ```shell
-  alias tdocs='terraform-docs markdown --config=.terraform-docs.yml .'
-  alias tfmt='terraform fmt --recursive'
-  alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
-  alias tfsec="tfsec --exclude-downloaded-modules"
-  ```
+  - [Requirements][1]
+  - [Inputs][2]
+  - [Outputs][3]
+  - [Modules][4]
+  - [Resources][5]
 
   {{ .Header }}
 
@@ -58,21 +18,23 @@ content: |-
   {{ .Outputs }}{{"\n"}}
   {{ .Modules }}{{"\n"}}
   {{ .Resources }}{{"\n"}}
-  [1]: #overview
-  [2]: #example-input
-  [3]: #requirements
-  [4]: #inputs
-  [5]: #outputs
-  [6]: #modules
-  [7]: #resources
+  [1]: #requirements
+  [2]: #inputs
+  [3]: #outputs
+  [4]: #modules
+  [5]: #resources
 
 sort:
   enabled: true
+
 output:
   file: README.md
-  mode: replace
+  mode: inject
   template: |-
-    {{ .Content }}{{"\n"}}
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
+
 settings:
   indent: 2
   read-comments: false
