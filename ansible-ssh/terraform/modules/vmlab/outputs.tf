@@ -15,5 +15,5 @@ output "vpc_id" {
 
 output "control_host" {
   description = "IPV4 of the control host (whitelisted on port 22)"
-  value = local.control_host
+  value       = local.control_host
 }
