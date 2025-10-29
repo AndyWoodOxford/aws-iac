@@ -1,28 +1,8 @@
 ## Overview
 
-A VPC containing EC2 instance(s) in public subnets. Port 22 is open to allow Ansible to
+An AWS "lab" that includes a VPC containing EC2 instance(s) in public subnets. Port 22 is open to allow Ansible to
 connect over `ssh` from the control host (currently localhost). The instances can be
 connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.
-```
-./scripts/terraform-init.sh remote-state-key
-terraform plan -out tf.plan
-terraform apply tf.plan
-...
-terraform destroy
-```
-
-The `application` and `environment` [variables](./variables.tf) are used in the Ansible
-dynamic inventory to identify the hosts.
-
-The bash scripts have been checked using `shellcheck` (installed on MacOS using Homebrew).
-
-**NB** I reduced typing by defining these aliases in my `.zprofile`:
-```shell
-alias tdocs='terraform-docs markdown --config=.terraform-docs.yml .'
-alias tfmt='terraform fmt --recursive'
-alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
-alias tfsec="tfsec --exclude-downloaded-modules"
-```
 
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents

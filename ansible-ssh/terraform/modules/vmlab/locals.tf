@@ -13,10 +13,13 @@ locals {
     ubuntu = "ubuntu"
   }
 
-  standard_tags = {
-    Name        = var.name
-    environment = var.environment
-    remote_user = local.remote_users[var.platform]
-    terraform   = true
-  }
+  standard_tags = merge(
+    var.tags,
+    {
+      Name        = var.name
+      environment = var.environment
+      remote_user = local.remote_users[var.platform]
+      terraform   = true
+    }
+  )
 }
