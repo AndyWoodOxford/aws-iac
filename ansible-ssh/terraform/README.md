@@ -3,7 +3,7 @@
 A VPC containing 2 EC2 instances in public subnets. Port 22 is open to allow Ansible to
 connect over `ssh` from the control host (currently localhost). The instances can be
 connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.
-The state is managed in an S3 backend.
+The state file is local.
 
 The Ansible dynamic inventory matches the `application` and `environment` tags.
 
