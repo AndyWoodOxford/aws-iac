@@ -2,20 +2,20 @@
 variable "environment" {
   type        = string
   description = "The name of the environment, e.g. 'dev', 'example01'"
-  default = "example"
+  default     = "example"
 }
 
 variable "name" {
   type        = string
   description = "All resources will use this lowercase var as a Name, or as a prefix to the Name"
-  default = "vmlab"
+  default     = "vmlab"
 }
 
 # EC2
 variable "platform" {
   type        = string
   description = "EC2 VM platform"
-  default = "ubuntu"
+  default     = "ubuntu"
 }
 
 variable "instance_type" {
@@ -45,5 +45,5 @@ variable "vpc_cidr" {
 variable "subnet_cidr_mask" {
   type        = number
   description = "CIDR mask, e.g. /27 gives 27 (32 - 5)usable addresses"
-  default = 27
+  default     = 27
 }

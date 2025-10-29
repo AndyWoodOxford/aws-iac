@@ -10,5 +10,5 @@ output "nat_gateway" {
 
 output "vpc_id" {
   description = "VPC id"
-  value = module.vpc.vpc_id
+  value       = module.vpc.vpc_id
 }
