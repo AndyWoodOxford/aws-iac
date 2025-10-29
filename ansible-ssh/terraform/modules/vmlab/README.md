@@ -7,13 +7,12 @@ connected via a Systems Manager SSM agent. An S3 bucket is created for (future) 
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents
 
-- [Overview][1]
-- [Example Input][2]
-- [Requirements][3]
-- [Inputs][4]
-- [Outputs][5]
-- [Modules][6]
-- [Resources][7]
+- [Requirements][1]
+- [Inputs][2]
+- [Outputs][3]
+- [Modules][4]
+- [Resources][5]
+
 
 
 ## Requirements
@@ -42,8 +41,10 @@ connected via a Systems Manager SSM agent. An S3 bucket is created for (future) 
 
 | Name | Description |
 |------|-------------|
+| <a name="output_control_host"></a> [control\_host](#output\_control\_host) | IPV4 of the control host (whitelisted on port 22) |
 | <a name="output_instances_ipv4"></a> [instances\_ipv4](#output\_instances\_ipv4) | IPV4 addresses of the instance(s) |
 | <a name="output_nat_gateway"></a> [nat\_gateway](#output\_nat\_gateway) | NAT gateway id |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC id |
 
 ## Modules
 
@@ -82,12 +83,9 @@ connected via a Systems Manager SSM agent. An S3 bucket is created for (future) 
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [http_http.localhost](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
 
-[1]: #overview
-[2]: #example-input
-[3]: #requirements
-[4]: #inputs
-[5]: #outputs
-[6]: #modules
-[7]: #resources
-
+[1]: #requirements
+[2]: #inputs
+[3]: #outputs
+[4]: #modules
+[5]: #resources
 <!-- END_TF_DOCS -->

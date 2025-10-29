@@ -7,13 +7,13 @@ connected via a Systems Manager SSM agent. An S3 bucket is created for (future) 
 ## Usage
 To run this example you need to execute:
 
-  ```bash
-  $ terraform init
-  $ terraform plan
-  $ terraform apply
-  ```
+```bash
+$ terraform init
+$ terraform plan
+$ terraform apply
+ ```
 
-Run `terraform destroy` when you don't need these resources.
+Run `terraform destroy` to clean up.
 
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents
@@ -24,21 +24,34 @@ Run `terraform destroy` when you don't need these resources.
 - [Modules][4]
 - [Resources][5]
 
+
+
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.5 |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_name"></a> [name](#input\_name) | Used to name resources | `string` | `"example"` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_instances_ipv4"></a> [instances\_ipv4](#output\_instances\_ipv4) | IPV4 addresses of the instance(s) |
+| <a name="output_nat_gateway"></a> [nat\_gateway](#output\_nat\_gateway) | NAT gateway id |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC id |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_vmlab"></a> [vmlab](#module\_vmlab) | ../.. | n/a |
 
 ## Resources
 
