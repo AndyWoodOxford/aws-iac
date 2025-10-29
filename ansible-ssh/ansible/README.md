@@ -8,8 +8,8 @@ in the Terraform [config](../terraform/main.tf). The `environment_name` is passe
 variable, e.g.
 
 ```shell
-# Terraform has used an Ubuntu AMI and set the 'environment' tag to 'wip'
-ansible-playbook -v --extra-vars environment_name=wip --user ubuntu playbook.yml --list-hosts 
+# Terraform has used an Ubuntu AMI and set the 'environment' tag to 'example'
+ansible-playbook -v --extra-vars environment_name=example --user ubuntu playbook.yml --list-hosts 
 ansible-playbook -vv -e environment_name=wip playbook.yml
 ansible-lint playbook.yml
 ```
