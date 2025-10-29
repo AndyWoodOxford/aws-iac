@@ -69,20 +69,3 @@ tasks:
     dir: terraform
     cmds:
       - terraform destroy -auto-approve
-
-  alint:
-    desc: Lint the ansible playbook
-    dir: ansible
-    cmds:
-      - ansible-lint -v playbook.yml
-
-  playbook:
-    desc: Execute the Ansible playbook
-    dir: ansible
-    env:
-      ANSIBLE_VERBOSITY: '{{ .ANSIBLE_VERBOSITY | default "0" }}'
-      ENV: '{{ .ENVIRONMENT | default envname }}'
-    cmds:
-      - source ./venv/bin/execute
-      - pip install -r requirements.txt
-      - ansible-playbook -v --extra-vars environment_name={{ .ENV }} --user ubuntu playbook.yml
