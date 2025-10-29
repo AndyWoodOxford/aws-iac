@@ -2,10 +2,23 @@
 
 version: '3'
 
+dotenv: ['.env']
+
 tasks:
   default:
     desc: Execute all of the static checks on the Terraform code
-    deps: [tvalid]
+    cmds:
+      - task: tinit
+      - task: tvalid
+      - task: tlint
+      - task: tsec
+
+  tinit:
+    desc: Initialise the Terraform configuration (local state)
+    dir: terraform
+    cmds:
+      - terraform init -backend=false -upgrade
+    internal: true
 
   tclean:
     desc: Cleans the downloaded modules, providers and the lock file
@@ -18,7 +31,7 @@ tasks:
     desc: Validates the Terraform including a format check
     dir: terraform
     cmds:
-      - terraform init -backend=false -upgrade
+      - task: tinit
       - terraform fmt -recursive -diff
       - terraform validate
 
@@ -26,7 +39,7 @@ tasks:
     desc: Test the Terraform config for formatting, validity and linting
     dir: terraform
     cmds:
-      - terraform init -backend=false -upgrade
+      - task: tinit
       - tflint
 
   tsec:
@@ -35,22 +48,20 @@ tasks:
     cmds:
       - tfsec --exclude-downloaded-modules
 
-  tinit:
-    desc: Initialise the Terraform configuration
-    dir: terraform
-    cmds:
-      - terraform init
-
   tplan:
-    desc: Create a Terraform plan
+    desc: Create a Terraform plan (local state)
     dir: terraform
+    env:
+      ENV: '{{ .ENVIRONMENT | default "envname" }}'
     cmds:
-      - terraform plan -out tf.plan
+      - task: tinit
+      - terraform plan -var 'environment={{ .ENV }}' -out tf.plan
 
   tapply:
-    desc: Apply the Terraform plan
+    desc: Apply the Terraform plan (local state)
     dir: terraform
     cmds:
+      - task: tinit
       - terraform apply tf.plan
 
   tdestroy:
@@ -68,7 +79,10 @@ tasks:
   playbook:
     desc: Execute the Ansible playbook
     dir: ansible
+    env:
+      ANSIBLE_VERBOSITY: '{{ .ANSIBLE_VERBOSITY | default "0" }}'
+      ENV: '{{ .ENVIRONMENT | default envname }}'
     cmds:
       - source ./venv/bin/execute
       - pip install -r requirements.txt
-      - ansible-playbook -v --extra-vars environment_name=example --user ubuntu playbook.yml
+      - ansible-playbook -v --extra-vars environment_name={{ .ENV }} --user ubuntu playbook.yml

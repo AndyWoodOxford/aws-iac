@@ -17,6 +17,9 @@
 **/ansible.log
 **/.vault-password
 
+# Senesitive
+**/.env
+
 # WIP
 **/wip-*
 **/*-tmp.sh
