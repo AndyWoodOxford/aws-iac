@@ -16,3 +16,7 @@ tfsec --exclude-downloaded-modules
 ## Ansible SSM
 A simple EC2 set-up with an Ansible playbook that connects over SSM instead of
 using the traditional `ssh` key pair.
+
+## Ansible SSH
+A more traditional EC2 set up with Ansible connecting over `ssh`. The Terraform will
+later become a module.

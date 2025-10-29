@@ -15,5 +15,6 @@ locals {
     Name        = var.name
     environment = var.environment
     remote_user = local.remote_users[var.platform]
+    terraform   = true
   }
 }

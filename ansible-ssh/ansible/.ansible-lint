@@ -1,0 +1,7 @@
+---
+# .ansible-lint
+
+# These vars are passed on the command line and are used by the dynamic inventory
+# to identify the hosts
+extra_vars:
+  environment_name: foo
