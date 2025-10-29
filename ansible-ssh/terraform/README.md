@@ -7,11 +7,13 @@ The state is managed in an S3 backend.
 
 The Ansible dynamic inventory matches the `application` and `environment` tags.
 
+**NB** A local Terraform state is used
+
 ## Usage
 To run this example you need to execute:
 
 ```bash
-$ ./scripts/terraform-init "remote/state/key"
+$ terraform init
 $ terraform plan
 $ terraform apply
  ```
