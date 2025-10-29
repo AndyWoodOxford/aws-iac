@@ -10,6 +10,28 @@ provider "aws" {
   }
 }
 
+locals {
+  name = "vmlab"
+
+  tags = {
+    application = "ansible-ssh"
+    environment = var.environment
+  }
+}
+
 module "resources" {
-  source = ""
+  source = "./modules/vmlab"
+
+  environment = var.environment
+  name        = local.name
+
+  instance_count = var.instance_count
+  instance_type  = var.instance_type
+
+  platform        = "ubuntu"
+  public_key_path = var.public_key_path
+
+  vpc_cidr = var.vpc_cidr
+
+  tags = local.tags
 }
