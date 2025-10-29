@@ -20,7 +20,7 @@ locals {
 }
 
 module "resources" {
-  source = "./modules/vmlab"
+  source = "../../terraform/modules/vmlab"
 
   environment = var.environment
   name        = local.name
