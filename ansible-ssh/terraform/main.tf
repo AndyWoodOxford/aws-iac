@@ -20,6 +20,7 @@ locals {
 }
 
 module "resources" {
+  # Speedier local development - "prod" would use a GitLab URL
   source = "../../terraform/modules/vmlab"
 
   environment = var.environment
