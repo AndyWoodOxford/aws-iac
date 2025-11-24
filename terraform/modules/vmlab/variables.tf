@@ -28,7 +28,7 @@ variable "tags" {
   default     = {}
 }
 
-# EC2
+### EC2
 variable "platform" {
   type        = string
   description = "EC2 VM platform"
@@ -62,6 +62,13 @@ variable "public_key_path" {
   type        = string
   description = "Path to the SSH public key file used to launch the instances"
   default     = null
+}
+
+### VPC
+variable "create_vpc" {
+  type        = bool
+  description = "Create a VPC if true"
+  default     = "true"
 }
 
 variable "vpc_cidr" {

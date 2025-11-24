@@ -15,5 +15,7 @@ module "vmlab" {
 
   public_key_path = "~/.ssh/id_rsa.pub"
 
+  create_vpc = "true"
+
   tags = local.tags
 }
