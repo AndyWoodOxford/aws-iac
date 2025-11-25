@@ -1,7 +1,7 @@
 resource "aws_security_group" "vm" {
   name        = "${var.name}-${var.environment}"
   description = "Allow system updates and Ansible access"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
   tags = local.standard_tags
 }
@@ -59,7 +59,10 @@ resource "aws_instance" "vm" {
   }
 
   associate_public_ip_address = true
-  subnet_id                   = module.vpc.public_subnets[count.index % length(module.vpc.public_subnets)]
+  subnet_id = (
+    var.create_vpc ? module.vpc[0].public_subnets[count.index % length(module.vpc[0].public_subnets)]
+    : data.aws_subnets.default.ids[count.index % length(data.aws_subnets.default.ids)]
+  )
 
   vpc_security_group_ids = [
     aws_security_group.vm.id

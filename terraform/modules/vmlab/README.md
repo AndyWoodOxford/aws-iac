@@ -1,8 +1,9 @@
 ## Overview
 
-An AWS "lab" that includes a VPC containing EC2 instance(s) in public subnets. Port 22 is open to allow Ansible to
+An AWS "lab" that containing EC2 instance(s) in public subnets. Port 22 is open to allow Ansible to
 connect over `ssh` from the control host (currently localhost). The instances can be
-connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.
+connected via a Systems Manager SSM agent. A VPC is optionally created - otherwise the default
+VPC and subnets are used. An S3 bucket is created for (future) logging.
 
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents
@@ -27,6 +28,7 @@ connected via a Systems Manager SSM agent. An S3 bucket is created for (future) 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Create a VPC if true | `bool` | `"true"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment, e.g. 'dev', 'example01' | `string` | `""` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances | `number` | `1` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance | `string` | `"t2.micro"` | no |
@@ -81,6 +83,8 @@ connected via a Systems Manager SSM agent. An S3 bucket is created for (future) 
 | [aws_iam_policy.AmazonSSMManagedInstanceCorePolicy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_iam_policy_document.logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_subnets.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_vpc.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 | [http_http.localhost](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
 
 [1]: #requirements

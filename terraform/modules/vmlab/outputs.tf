@@ -5,12 +5,12 @@ output "instances_ipv4" {
 
 output "nat_gateway" {
   description = "NAT gateway id"
-  value       = module.vpc.natgw_ids
+  value       = var.create_vpc ? module.vpc[0].natgw_ids : null
 }
 
 output "vpc_id" {
   description = "VPC id"
-  value       = module.vpc.vpc_id
+  value       = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 }
 
 output "control_host" {
