@@ -17,8 +17,7 @@ tfsec --exclude-downloaded-modules
 that wrap common commands.
 
 ## Ansible SSH
-A traditional EC2 set up with Ansible connecting over `ssh`. The Terraform will
-later become a module.
+A traditional EC2 set up with Ansible connecting over `ssh`. The Terraform is evolving as a module.
 
 ## Ansible SSM
 A simple EC2 set-up with an Ansible playbook that connects over SSM instead of
