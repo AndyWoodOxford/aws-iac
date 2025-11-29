@@ -14,12 +14,12 @@ locals {
   }
 
   standard_tags = merge(
-    var.tags,
     {
       Name        = var.name
       environment = var.environment
       remote_user = local.remote_users[var.platform]
       terraform   = true
-    }
+    },
+    var.tags
   )
 }
