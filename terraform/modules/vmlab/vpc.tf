@@ -6,13 +6,6 @@ locals {
 
   public_subnets_ipv4 = [
   for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
-
-  default_private_subnets_ipv4 = [
-  for i in range(0, length(local.availability_zones)) : cidrsubnet(data.aws_vpc.default.cidr_block, var.subnet_cidr_mask - 16, i)]
-
-  default_public_subnets_ipv4 = [
-  for i in range(0, length(local.availability_zones)) : cidrsubnet(data.aws_vpc.default.cidr_block, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
-
 }
 
 module "vpc" {
