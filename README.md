@@ -13,6 +13,14 @@ tflint
 tfsec --exclude-downloaded-modules
 ```
 
+`tfenv` is used to manage multiple versions of Terraform on the same machine.
+```shell
+brew install tfenv
+tfenv install 1.14.1
+tfenv list
+tfenv use 1.14.1
+```
+
 **NB** Some projects also include a [Taskfile](https://taskfile.dev/) with tasks
 that wrap common commands.
 
