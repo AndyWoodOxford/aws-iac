@@ -6,6 +6,7 @@ provider "aws" {
     tags = {
       category    = "asg"
       application = "oreillylearning"
+      terraform   = "true"
     }
   }
 }

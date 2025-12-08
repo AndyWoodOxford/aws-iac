@@ -25,5 +25,5 @@ variable "desired_capacity" {
     condition     = var.desired_capacity <= 3
     error_message = "No more that 3 instances can be running."
   }
-  default = 1
+  default = 2
 }

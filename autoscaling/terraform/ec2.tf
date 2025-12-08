@@ -25,24 +25,36 @@ resource "aws_launch_template" "example" {
   block_device_mappings {
     device_name = "/dev/sdf"
     ebs {
-      volume_size = 20
+      delete_on_termination = "true"
+      encrypted             = "true"
+      volume_size           = 20
     }
   }
   ebs_optimized = true
 
   vpc_security_group_ids = [aws_security_group.egress.id]
 
-  user_data = filebase64("${path.module}/user-data-ubuntu.sh")
-
   iam_instance_profile {
     name = aws_iam_instance_profile.ssm.name
+  }
+
+  instance_market_options {
+    market_type = "spot"
   }
 
   metadata_options {
     http_tokens = "required"
   }
 
-  tags = local.standard_tags
+  monitoring {
+    enabled = "false"
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = local.standard_tags
+  }
 }
 
 resource "aws_autoscaling_group" "example" {
