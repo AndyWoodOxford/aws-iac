@@ -18,7 +18,7 @@ The bash scripts have been checked using `shellcheck` (installed on MacOS using 
 
 **NB** I reduced typing by defining these aliases in my `.zprofile`:
 ```shell
-alias tdocs='terraform-docs markdown --config=.terraform-docs.yml .'
+alias tfdocs='terraform-docs markdown --config=.terraform-docs.yml .'
 alias tfmt='terraform fmt --recursive'
 alias tfclean="rm -rf .terraform/ .terraform.lock.hcl"
 alias tfsec="tfsec --exclude-downloaded-modules"
