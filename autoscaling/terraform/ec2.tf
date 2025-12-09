@@ -1,26 +1,10 @@
-resource "aws_security_group" "egress" {
-  name        = "${var.resource_prefix}-egress"
-  description = "Allow egress for system updates etc"
-  vpc_id      = data.aws_vpc.default.id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_egress_rule" "egress" {
-  security_group_id = aws_security_group.egress.id
-  ip_protocol       = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_ipv4         = "0.0.0.0/0"
-
-  tags = local.standard_tags
-}
-
 resource "aws_launch_template" "example" {
   name = "example"
 
-  image_id      = data.aws_ami.ubuntu.id
+  image_id      = data.aws_ami.amazonlinux.id
   instance_type = var.instance_type
+
+  user_data = filebase64("${path.module}/user-data-amazonlinux.sh")
 
   block_device_mappings {
     device_name = "/dev/sdf"
@@ -33,7 +17,7 @@ resource "aws_launch_template" "example" {
   }
   ebs_optimized = true
 
-  vpc_security_group_ids = [aws_security_group.egress.id]
+  vpc_security_group_ids = [aws_security_group.instance.id]
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ssm.name
@@ -80,43 +64,18 @@ resource "aws_autoscaling_group" "example" {
   }
 }
 
-resource "aws_security_group" "alb" {
-  name        = "${var.resource_prefix}-alb"
-  description = "Allow inbound HTTP requests"
-  vpc_id      = data.aws_vpc.default.id
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ingress" {
-  security_group_id = aws_security_group.alb.id
-  ip_protocol       = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_ipv4         = "${local.localhost}/32"
-
-  tags = local.standard_tags
-}
-
-resource "aws_vpc_security_group_egress_rule" "targets" {
-  security_group_id = aws_security_group.alb.id
-  ip_protocol       = "tcp"
-  from_port         = 0
-  to_port           = 0
-  #cidr_ipv4         = data.aws_vpc.default.cidr_block
-  cidr_ipv4 = "0.0.0.0/0"
-
-  tags = local.standard_tags
-}
+#------------------------------------------------------------------------------
+# Load Balancer
 
 #tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
 resource "aws_lb" "example" {
   name                       = var.resource_prefix
   load_balancer_type         = "application"
+  internal                   = false
   subnets                    = data.aws_subnets.default.ids
   security_groups            = [aws_security_group.alb.id]
   drop_invalid_header_fields = true
-  tags = local.standard_tags
+  tags                       = local.standard_tags
 }
 
 #tfsec:ignore:aws-elb-http-not-used   # https to come soon
@@ -126,27 +85,6 @@ resource "aws_lb_listener" "example" {
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404: Your fault!"
-      status_code  = 404
-    }
-  }
-}
-
-resource "aws_lb_listener_rule" "example" {
-  listener_arn = aws_lb_listener.example.arn
-  priority     = 100
-
-  condition {
-    path_pattern {
-      values = ["*"]
-    }
-  }
-
-  action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.example.arn
   }
@@ -157,16 +95,11 @@ resource "aws_lb_target_group" "example" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
+}
 
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    matcher             = "200"
-    interval            = 15
-    timeout             = 3
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-  }
+resource "aws_autoscaling_attachment" "example" {
+  autoscaling_group_name = aws_autoscaling_group.example.id
+  lb_target_group_arn    = aws_lb_target_group.example.arn
 }
 
 # An attempt to use the ALB module from the Terraform registry
@@ -213,3 +146,64 @@ module "alb" {
     }
   }
 }
+
+#------------------------------------------------------------------------------
+# Instance security group
+resource "aws_security_group" "instance" {
+  name        = "${var.resource_prefix}-instance"
+  description = "Allow access from load balancer"
+  vpc_id      = data.aws_vpc.default.id
+
+  tags = local.standard_tags
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingress" {
+  security_group_id            = aws_security_group.instance.id
+  ip_protocol                  = "tcp"
+  from_port                    = 80
+  to_port                      = 80
+  referenced_security_group_id = aws_security_group.alb.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "egress" {
+  security_group_id = aws_security_group.instance.id
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv4         = "0.0.0.0/0"
+
+  tags = local.standard_tags
+}
+
+#------------------------------------------------------------------------------
+# Load balancer security group
+resource "aws_security_group" "alb" {
+  name        = "${var.resource_prefix}-alb"
+  description = "Allow inbound HTTP requests"
+  vpc_id      = data.aws_vpc.default.id
+
+  tags = local.standard_tags
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingress_alb" {
+  security_group_id = aws_security_group.alb.id
+  ip_protocol       = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_ipv4         = "0.0.0.0/0"
+  #cidr_ipv4         = "${local.localhost}/32"
+
+  tags = local.standard_tags
+}
+
+resource "aws_vpc_security_group_egress_rule" "egress_alb" {
+  security_group_id = aws_security_group.alb.id
+  ip_protocol       = "tcp"
+  from_port         = 0
+  to_port           = 0
+  #cidr_ipv4         = data.aws_vpc.default.cidr_block
+  cidr_ipv4 = "0.0.0.0/0"
+
+  tags = local.standard_tags
+}
+

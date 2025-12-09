@@ -1,5 +1,14 @@
 data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
+
+data "aws_ami" "amazonlinux" {
+  owners      = ["amazon"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
 
 data "aws_ami" "ubuntu" {
   owners      = ["amazon"]
@@ -31,6 +40,8 @@ data "aws_subnets" "default" {
     values = [data.aws_vpc.default.id]
   }
 }
+
+data "aws_region" "current" {}
 
 data "aws_availability_zones" "az" {
   state = "available"
