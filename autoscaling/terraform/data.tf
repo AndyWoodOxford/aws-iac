@@ -1,3 +1,6 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 data "aws_ami" "ubuntu" {
   owners      = ["amazon"]
   most_recent = true

@@ -27,6 +27,7 @@ resource "aws_launch_template" "example" {
     ebs {
       delete_on_termination = "true"
       encrypted             = "true"
+      kms_key_id            = aws_kms_key.encryptor.arn
       volume_size           = 20
     }
   }
@@ -50,11 +51,7 @@ resource "aws_launch_template" "example" {
     enabled = "false"
   }
 
-  tag_specifications {
-    resource_type = "instance"
-
-    tags = local.standard_tags
-  }
+  tags = local.standard_tags
 }
 
 resource "aws_autoscaling_group" "example" {
@@ -119,6 +116,7 @@ resource "aws_lb" "example" {
   subnets                    = data.aws_subnets.default.ids
   security_groups            = [aws_security_group.alb.id]
   drop_invalid_header_fields = true
+  tags = local.standard_tags
 }
 
 #tfsec:ignore:aws-elb-http-not-used   # https to come soon
