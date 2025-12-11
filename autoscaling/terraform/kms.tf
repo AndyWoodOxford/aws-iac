@@ -12,7 +12,7 @@ resource "aws_kms_key_policy" "encryptor" {
     Id      = "key-default-1",
     Statement = [
       {
-        Sid    = "default",
+        Sid    = "Enable IAM User Permissions",
         Effect = "Allow",
         Principal = {
           AWS = "arn:aws:iam::${local.account_id}:root"
@@ -21,9 +21,10 @@ resource "aws_kms_key_policy" "encryptor" {
         Resource = "*"
       },
       {
+        Sid = "Allow access for Key Administrators",
         Effect = "Allow",
-        Principal = {
-          Service = "logs.${data.aws_region.current.name}.amazonaws.com"
+        "Principal": {
+          "AWS" = "arn:aws:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
         },
         Action = [
           "kms:Encrypt*",

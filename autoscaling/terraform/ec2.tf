@@ -23,10 +23,6 @@ resource "aws_launch_template" "example" {
     name = aws_iam_instance_profile.ssm.name
   }
 
-  instance_market_options {
-    market_type = "spot"
-  }
-
   metadata_options {
     http_tokens = "required"
   }
