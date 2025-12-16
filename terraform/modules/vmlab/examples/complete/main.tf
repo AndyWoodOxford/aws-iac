@@ -18,6 +18,13 @@ module "vmlab" {
   instance_count = 1
   platform       = "ubuntu"
 
+  # allow ingress for ssh and http
+  control_host_ingress = [
+    { port = 22, protocol = "tcp" },
+    { port = 80, protocol = "tcp" },
+  ]
+
+  # public key for ssh access
   public_key_path = "~/.ssh/id_rsa.pub"
 
   tags = local.tags

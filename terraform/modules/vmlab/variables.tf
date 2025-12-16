@@ -92,3 +92,16 @@ variable "subnet_cidr_mask" {
   }
   default = 27
 }
+
+variable "control_host_ingress" {
+  type = list(object({
+    port     = number
+    protocol = string
+  }))
+  description = "Ingress from control host"
+  validation {
+    condition     = alltrue([for i in var.control_host_ingress : contains(["icmp", "tcp", "udp"], i.protocol)])
+    error_message = "One of the protocol(s) is not supported."
+  }
+  default = []
+}

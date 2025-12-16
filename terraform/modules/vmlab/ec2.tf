@@ -1,13 +1,13 @@
-resource "aws_security_group" "vm" {
-  name        = "${var.name}-${var.environment}"
-  description = "Allow system updates and Ansible access"
+resource "aws_security_group" "vm_egress" {
+  name        = "${var.name}-${var.environment}-egress"
+  description = "Allow system updates"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
   tags = local.standard_tags
 }
 
 resource "aws_vpc_security_group_egress_rule" "http" {
-  security_group_id = aws_security_group.vm.id
+  security_group_id = aws_security_group.vm_egress.id
   ip_protocol       = "tcp"
   from_port         = 80
   to_port           = 80
@@ -17,7 +17,7 @@ resource "aws_vpc_security_group_egress_rule" "http" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "https" {
-  security_group_id = aws_security_group.vm.id
+  security_group_id = aws_security_group.vm_egress.id
   ip_protocol       = "tcp"
   from_port         = 443
   to_port           = 443
@@ -26,12 +26,10 @@ resource "aws_vpc_security_group_egress_rule" "https" {
   tags = local.standard_tags
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ansible" {
-  security_group_id = aws_security_group.vm.id
-  ip_protocol       = "tcp"
-  from_port         = 22
-  to_port           = 22
-  cidr_ipv4         = "${local.control_host}/32"
+resource "aws_security_group" "control_host_ingress" {
+  name        = "${var.name}-${var.environment}-ingress"
+  description = "Allow access from the control host"
+  vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
   tags = local.standard_tags
 }
@@ -65,7 +63,8 @@ resource "aws_instance" "vm" {
   )
 
   vpc_security_group_ids = [
-    aws_security_group.vm.id
+    aws_security_group.vm_egress.id,
+    aws_security_group.control_host_ingress.id
   ]
 
   iam_instance_profile = aws_iam_instance_profile.ssm.name
