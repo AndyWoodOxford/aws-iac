@@ -1,29 +1,12 @@
-# Account
 data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
 
-# EC2
-data "aws_ami" "amazonlinux2023" {
+data "aws_ami" "amazonlinux" {
   owners      = ["amazon"]
   most_recent = true
 
-  name_regex = "^al2023-ami-2023\\..+-x86_64$"
-
   filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-}
-
-data "aws_ami" "debian13" {
-  owners      = ["amazon"]
-  most_recent = true
-
-  name_regex = "^debian-13-amd64-\\d+-\\d+$"
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 }
 
@@ -39,7 +22,6 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-# IAM
 data "aws_iam_policy" "AmazonSSMManagedInstanceCorePolicy" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
@@ -48,10 +30,8 @@ data "aws_iam_policy" "AmazonCloudWatchAgentServerPolicy" {
   arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
-# VPC
 data "aws_vpc" "default" {
-  default = "true"
-  state   = "available"
+  default = true
 }
 
 data "aws_subnets" "default" {
@@ -61,6 +41,8 @@ data "aws_subnets" "default" {
   }
 }
 
+data "aws_region" "current" {}
+
 data "aws_availability_zones" "az" {
   state = "available"
 }
@@ -68,6 +50,3 @@ data "aws_availability_zones" "az" {
 data "http" "localhost" {
   url = "https://ipv4.icanhazip.com/"
 }
-
-
-

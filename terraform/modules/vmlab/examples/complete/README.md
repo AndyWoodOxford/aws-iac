@@ -43,8 +43,9 @@ Run `terraform destroy` to clean up.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_control_host"></a> [control\_host](#output\_control\_host) | IPV4 of the control host (whitelisted on port 22) |
+| <a name="output_control_host_access"></a> [control\_host\_access](#output\_control\_host\_access) | Ingress on the instances from the control host |
 | <a name="output_instances_ipv4"></a> [instances\_ipv4](#output\_instances\_ipv4) | IPV4 addresses of the instance(s) |
-| <a name="output_nat_gateway"></a> [nat\_gateway](#output\_nat\_gateway) | NAT gateway id |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC id |
 
 ## Modules

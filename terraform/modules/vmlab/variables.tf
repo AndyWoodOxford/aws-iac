@@ -58,6 +58,12 @@ variable "instance_count" {
   default = 1
 }
 
+variable "userdata" {
+  type        = string
+  description = "Path to file containing EC2 userdata"
+  default     = null
+}
+
 variable "public_key_path" {
   type        = string
   description = "Path to the SSH public key file used to launch the instances"
@@ -85,4 +91,20 @@ variable "subnet_cidr_mask" {
     error_message = "The CIDR subnet mask must be in the range 17 to 28."
   }
   default = 27
+}
+
+variable "control_host_ingress" {
+  type = list(object({
+    description = string
+    port        = number
+    protocol    = string
+  }))
+  description = "Ingress from control host"
+  validation {
+    condition = alltrue(
+      [for i in var.control_host_ingress : contains(["icmp", "tcp", "udp"], i.protocol)]
+    )
+    error_message = "One of the protocol(s) is not supported."
+  }
+  default = []
 }
