@@ -3,6 +3,18 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 # EC2
+data "aws_ami" "amazonlinux2023" {
+  owners      = ["amazon"]
+  most_recent = true
+
+  name_regex = "^al2023-ami-2023\\..+-x86_64$"
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+}
+
 data "aws_ami" "debian13" {
   owners      = ["amazon"]
   most_recent = true
