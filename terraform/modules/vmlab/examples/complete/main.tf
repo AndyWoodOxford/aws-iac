@@ -18,6 +18,9 @@ module "vmlab" {
   instance_count = 1
   platform       = "ubuntu"
 
+  # basic webserver
+  userdata = "${path.module}/userdata_ubuntu.sh"
+
   # allow ingress for ssh and http
   control_host_ingress = [
     { port = 22, protocol = "tcp", description = "ssh access" },
