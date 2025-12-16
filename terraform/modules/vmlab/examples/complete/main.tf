@@ -20,8 +20,8 @@ module "vmlab" {
 
   # allow ingress for ssh and http
   control_host_ingress = [
-    { port = 22, protocol = "tcp" },
-    { port = 80, protocol = "tcp" },
+    { port = 22, protocol = "tcp", description = "ssh access" },
+    { port = 80, protocol = "tcp", description = "Apache Webserver" },
   ]
 
   # public key for ssh access

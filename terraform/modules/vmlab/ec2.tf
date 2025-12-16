@@ -31,6 +31,21 @@ resource "aws_security_group" "control_host_ingress" {
   description = "Allow access from the control host"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
+  dynamic "ingress" {
+    for_each = toset(var.control_host_ingress)
+    content {
+      description = ingress.value.description
+      protocol    = ingress.value.protocol
+      from_port   = ingress.value.port
+      to_port     = ingress.value.port
+      cidr_blocks = ["${local.control_host}/32"]
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags = local.standard_tags
 }
 
