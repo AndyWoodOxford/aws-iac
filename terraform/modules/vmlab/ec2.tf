@@ -78,6 +78,8 @@ resource "aws_instance" "vm" {
     http_tokens = "required"
   }
 
+  user_data = var.userdata != null ? filebase64(var.userdata) : null
+
   tags = merge(
     local.standard_tags,
     {

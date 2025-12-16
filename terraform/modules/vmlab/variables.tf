@@ -58,6 +58,12 @@ variable "instance_count" {
   default = 1
 }
 
+variable "userdata" {
+  type        = string
+  description = "Path to file containing EC2 userdata"
+  default     = null
+}
+
 variable "public_key_path" {
   type        = string
   description = "Path to the SSH public key file used to launch the instances"
