@@ -60,7 +60,7 @@ variable "instance_count" {
 
 variable "userdata" {
   type        = string
-  description = "Path to file containing EC2 userdata"
+  description = "Path to a file containing EC2 userdata (plain text)."
   default     = null
 }
 

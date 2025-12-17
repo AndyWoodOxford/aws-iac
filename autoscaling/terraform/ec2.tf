@@ -51,7 +51,9 @@ resource "aws_autoscaling_group" "example" {
     version = "$Latest"
   }
 
-  force_delete = true
+  lifecycle {
+    create_before_destroy = true
+  }
 
   tag {
     key                 = "Name"
