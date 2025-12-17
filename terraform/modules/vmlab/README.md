@@ -38,7 +38,7 @@ VPC and subnets are used. An S3 bucket is created for (future) logging.
 | <a name="input_public_key_path"></a> [public\_key\_path](#input\_public\_key\_path) | Path to the SSH public key file used to launch the instances | `string` | `null` | no |
 | <a name="input_subnet_cidr_mask"></a> [subnet\_cidr\_mask](#input\_subnet\_cidr\_mask) | CIDR mask, e.g. /27 gives 27 (32 - 5)usable addresses | `number` | `27` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Add these tags to all resources | `map(string)` | `{}` | no |
-| <a name="input_userdata"></a> [userdata](#input\_userdata) | Path to file containing EC2 userdata | `string` | `null` | no |
+| <a name="input_userdata"></a> [userdata](#input\_userdata) | Path to a file containing EC2 userdata (plain text). | `string` | `null` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR block for the non-default VPC | `string` | `"10.0.0.0/16"` | no |
 
 ## Outputs

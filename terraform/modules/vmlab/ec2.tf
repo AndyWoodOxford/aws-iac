@@ -113,3 +113,6 @@ resource "aws_instance" "vm" {
     }
   )
 }
+
+#-----------------------
+# Experimentation with load balancer, target group and ASG
