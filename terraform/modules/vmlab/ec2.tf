@@ -186,4 +186,3 @@ resource "aws_lb_target_group" "vmlab" {
   protocol = "HTTP"
   vpc_id   = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 }
-
