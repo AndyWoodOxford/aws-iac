@@ -77,7 +77,7 @@ variable "create_vpc" {
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the non-default VPC"
-  default     = "10.0.1.0/20"
+  default     = "10.0.0.0/20"
 }
 
 variable "subnet_cidr_mask" {
