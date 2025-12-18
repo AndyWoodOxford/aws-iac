@@ -12,7 +12,7 @@ module "vmlab" {
   environment = local.env
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
-  create_vpc = "false"
+  create_vpc = "true"
 
   # spin up one Ubuntu instance
   instance_count = 1
@@ -27,7 +27,7 @@ module "vmlab" {
     { port = 80, protocol = "tcp", description = "Apache Webserver" },
   ]
 
-  # public key for ssh access
+  # public key for ssh access (optional)
   public_key_path = "~/.ssh/id_rsa.pub"
 
   tags = local.tags

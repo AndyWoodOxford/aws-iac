@@ -2,14 +2,10 @@ variable "environment" {
   type        = string
   description = "The name of the environment, e.g. 'dev', 'example01'"
   validation {
-    condition     = length(var.environment) <= 12
-    error_message = "The maximum length of the 'environment_name' variable is 12 characters."
-  }
-  validation {
     condition     = can(regex("^[a-z0-9]+$", var.environment))
     error_message = "The 'environment_name' variable can contain only lower case letters or numbers."
   }
-  default = ""
+  default = "env"
 }
 
 variable "name" {
@@ -19,7 +15,7 @@ variable "name" {
     condition     = var.name == lower(var.name)
     error_message = "The resources cannot have upper case characters."
   }
-  default = ""
+  default = "vmlab"
 }
 
 variable "tags" {
@@ -33,9 +29,10 @@ variable "platform" {
   type        = string
   description = "EC2 VM platform"
   validation {
-    condition     = contains(["debian", "ubuntu"], var.platform)
+    condition     = contains(["amazonlinux", "debian", "ubuntu"], var.platform)
     error_message = "Unsupported platform."
   }
+  default = "ubuntu"
 }
 
 variable "instance_type" {
@@ -73,14 +70,14 @@ variable "public_key_path" {
 ### VPC
 variable "create_vpc" {
   type        = bool
-  description = "Create a VPC if true"
-  default     = "true"
+  description = "Create a VPC if true. Use the default VPC if false."
+  default     = "false"
 }
 
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the non-default VPC"
-  default     = "10.0.0.0/16"
+  default     = "10.0.1.0/20"
 }
 
 variable "subnet_cidr_mask" {
