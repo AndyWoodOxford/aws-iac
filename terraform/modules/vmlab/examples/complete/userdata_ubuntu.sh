@@ -8,5 +8,10 @@ sudo apt update -y
 sudo apt install apache2 -y
 sudo systemctl start apache2
 
+created_at=$(date +'%Y-%m-%d %H:%M:%S')
 hostname=$(hostname)
-echo "Welcome to ${hostname}" | sudo tee /var/www/html/index.html
+
+cat > /var/www/html/index.html <<EOF
+<h1>Welcome to ${hostname}</h1>
+<p>Apache webserver created at ${created_at}</p>
+EOF
