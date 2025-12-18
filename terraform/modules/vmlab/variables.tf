@@ -93,7 +93,8 @@ variable "subnet_cidr_mask" {
 variable "control_host_ingress" {
   type = list(object({
     description = string
-    port        = number
+    from_port   = number
+    to_port     = number
     protocol    = string
   }))
   description = "Ingress from control host"

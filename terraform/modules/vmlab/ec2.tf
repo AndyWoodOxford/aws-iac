@@ -36,8 +36,8 @@ resource "aws_security_group" "control_host_ingress" {
     content {
       description = ingress.value.description
       protocol    = ingress.value.protocol
-      from_port   = ingress.value.port
-      to_port     = ingress.value.port
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
       cidr_blocks = ["${local.control_host}/32"]
     }
   }
