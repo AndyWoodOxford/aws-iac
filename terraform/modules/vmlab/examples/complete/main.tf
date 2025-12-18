@@ -21,10 +21,11 @@ module "vmlab" {
   # basic webserver
   userdata = "${path.module}/userdata_ubuntu.sh"
 
-  # allow ingress for ssh and http
+  # allow ingress for ssh and http and ping
   control_host_ingress = [
-    { port = 22, protocol = "tcp", description = "ssh access" },
-    { port = 80, protocol = "tcp", description = "Apache Webserver" },
+    { from_port = 22, to_port = 22, protocol = "tcp", description = "ssh access" },
+    { from_port = 8, to_port = 0, protocol = "icmp", description = "ping" },
+    { from_port = 80, to_port = 80, protocol = "tcp", description = "Apache Webserver" },
   ]
 
   # public key for ssh access (optional)
