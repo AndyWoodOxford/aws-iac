@@ -1,5 +1,5 @@
 locals {
-  env = "01"
+  env = "complete"
   tags = {
     example = "complete"
   }
@@ -13,6 +13,10 @@ module "vmlab" {
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
   create_vpc = "true"
+
+  # No load balancer or auto-scaling group
+  create_asg = false
+  create_lb  = false
 
   # spin up one Ubuntu instance
   instance_count = 1
