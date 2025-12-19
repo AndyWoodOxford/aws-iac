@@ -6,8 +6,6 @@ locals {
 
   public_subnets_ipv4 = [
   for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
-
-  public_subnet_names = ["tom", "dick", "harry"]
 }
 
 module "vpc" {
@@ -31,7 +29,6 @@ module "vpc" {
   single_nat_gateway = true
 
   public_subnets       = local.public_subnets_ipv4
-  public_subnet_names  = local.public_subnet_names
   public_subnet_suffix = "public"
   public_subnet_tags = {
     SubnetUsage = "public"
