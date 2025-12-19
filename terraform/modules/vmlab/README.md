@@ -1,9 +1,17 @@
 ## Overview
 
-An AWS "lab" that containing EC2 instance(s) in public subnets. Port 22 is open to allow Ansible to
-connect over `ssh` from the control host (currently localhost). The instances can be
-connected via a Systems Manager SSM agent. A VPC is optionally created - otherwise the default
-VPC and subnets are used. An S3 bucket is created for (future) logging.
+An AWS "lab" that containing EC2 instance(s) in public subnets.
+The module accepts optional ingress rules from the control host. The instances can also 
+be connected via a Systems Manager SSM agent.
+
+WIP - an optional launch template / auto-scaling group (ASG), and an optional application load
+balancer (ALB) with a target group containing instances from either the ASG or those
+directly provisioned.
+
+The default behaviour is to use the default VPC in the current region. Otherwise a VPC
+is created with public and private subnets (with a single NAT Gateway and EIP).
+
+An S3 bucket is created for (future) logging.
 
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents
@@ -28,12 +36,14 @@ VPC and subnets are used. An S3 bucket is created for (future) logging.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_control_host_ingress"></a> [control\_host\_ingress](#input\_control\_host\_ingress) | Ingress from control host | <pre>list(object({<br/>    description = string<br/>    port        = number<br/>    protocol    = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Create a VPC if true | `bool` | `"true"` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment, e.g. 'dev', 'example01' | `string` | n/a | yes |
+| <a name="input_control_host_ingress"></a> [control\_host\_ingress](#input\_control\_host\_ingress) | Ingress from control host | <pre>list(object({<br/>    description = string<br/>    from_port   = number<br/>    to_port     = number<br/>    protocol    = string<br/>  }))</pre> | `[]` | no |
+| <a name="input_create_asg"></a> [create\_asg](#input\_create\_asg) | Create a launch template and ASG if true. | `bool` | `"false"` | no |
+| <a name="input_create_lb"></a> [create\_lb](#input\_create\_lb) | Create an application load balancer and target group containing the instances if true. Ignored if create\_asg is true. | `bool` | `"false"` | no |
+| <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Create a VPC if true. Use the default VPC if false. | `bool` | `"false"` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment, e.g. 'dev', 'example01' | `string` | `"env"` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances | `number` | `1` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance | `string` | `"t2.micro"` | no |
-| <a name="input_name"></a> [name](#input\_name) | All resources will use this as a Name, or as a prefix to the Name | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | All resources will use this as a Name, or as a prefix to the Name | `string` | `"vmlab"` | no |
 | <a name="input_platform"></a> [platform](#input\_platform) | EC2 VM platform | `string` | `"ubuntu"` | no |
 | <a name="input_public_key_path"></a> [public\_key\_path](#input\_public\_key\_path) | Path to the SSH public key file used to launch the instances | `string` | `null` | no |
 | <a name="input_subnet_cidr_mask"></a> [subnet\_cidr\_mask](#input\_subnet\_cidr\_mask) | CIDR mask, e.g. /27 gives 27 (32 - 5)usable addresses | `number` | `27` | no |

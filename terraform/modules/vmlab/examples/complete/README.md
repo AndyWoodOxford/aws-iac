@@ -1,8 +1,9 @@
 ## Overview
 
-A VPC containing 2 EC2 instances in public subnets. Port 22 is open to allow Ansible to
-connect over `ssh` from the control host (currently localhost). The instances can be
-connected via a Systems Manager SSM agent. An S3 bucket is created for (future) logging.
+Spins up instance(s) in either the default VPC or a newly-created one. A userdata
+script starts an Apache webserver that services a basic message.
+Ingress rules are created for `ssh`, `http` and ICMP from the control host. Access via
+Systems Manager SSM agents is always supported.
 
 ## Usage
 To run this example you need to execute:

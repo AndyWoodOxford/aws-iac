@@ -3,7 +3,12 @@ resource "aws_security_group" "vm_egress" {
   description = "Allow system updates"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
-  tags = local.standard_tags
+  tags = merge(
+    local.standard_tags,
+    {
+      Name = "${local.resource_prefix}-egress"
+    }
+  )
 }
 
 resource "aws_vpc_security_group_egress_rule" "http" {
@@ -46,7 +51,12 @@ resource "aws_security_group" "control_host_ingress" {
     create_before_destroy = true
   }
 
-  tags = local.standard_tags
+  tags = merge(
+    local.standard_tags,
+    {
+      Name = "${local.resource_prefix}-control-host"
+    }
+  )
 }
 
 resource "aws_key_pair" "ansible" {
@@ -99,8 +109,8 @@ resource "aws_instance" "vm" {
     local.standard_tags,
     {
       Name = (var.instance_count > 1
-        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
-        : local.standard_tags["Name"]
+        ? format("%s-%d", local.resource_prefix, count.index + 1)
+        : local.resource_prefix
       )
     }
   )
@@ -108,8 +118,8 @@ resource "aws_instance" "vm" {
   volume_tags = merge(local.standard_tags,
     {
       Name = (var.instance_count > 1
-        ? format("%s-%d", local.standard_tags["Name"], count.index + 1)
-        : local.standard_tags["Name"]
+        ? format("%s-%d", local.resource_prefix, count.index + 1)
+        : local.resource_prefix
       )
     }
   )
@@ -118,7 +128,9 @@ resource "aws_instance" "vm" {
 #-----------------------
 # Experimentation with load balancer, target group and ASG
 resource "aws_launch_template" "vmlab" {
-  name = "example"
+  count = var.create_asg ? 1 : 0
+
+  name = local.resource_prefix
 
   image_id      = local.ami_ids[var.platform]
   instance_type = var.instance_type
@@ -148,7 +160,9 @@ resource "aws_launch_template" "vmlab" {
 }
 
 resource "aws_security_group" "alb" {
-  name        = "${var.name}-${var.environment}-alb"
+  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
+
+  name        = "${local.resource_prefix}-alb"
   description = "Application load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -156,7 +170,9 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
-  security_group_id = aws_security_group.alb.id
+  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
+
+  security_group_id = aws_security_group.alb[0].id
   ip_protocol       = "tcp"
   from_port         = 80
   to_port           = 80
@@ -168,6 +184,8 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 
 #tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
 resource "aws_lb" "vmlab" {
+  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
+
   name               = var.name
   load_balancer_type = "application"
   internal           = false
@@ -175,12 +193,14 @@ resource "aws_lb" "vmlab" {
   subnets = (
     var.create_vpc ? module.vpc[0].public_subnets : data.aws_subnets.default.ids
   )
-  security_groups            = [aws_security_group.alb.id]
+  security_groups            = [aws_security_group.alb[0].id]
   drop_invalid_header_fields = true
   tags                       = local.standard_tags
 }
 
 resource "aws_lb_target_group" "vmlab" {
+  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
+
   name     = var.name
   port     = 80
   protocol = "HTTP"

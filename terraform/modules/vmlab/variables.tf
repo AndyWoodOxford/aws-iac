@@ -67,6 +67,18 @@ variable "public_key_path" {
   default     = null
 }
 
+variable "create_lb" {
+  type        = bool
+  description = "Create an application load balancer and target group containing the instances if true. Ignored if create_asg is true."
+  default     = "false"
+}
+
+variable "create_asg" {
+  type        = bool
+  description = "Create a launch template and ASG if true."
+  default     = "false"
+}
+
 ### VPC
 variable "create_vpc" {
   type        = bool

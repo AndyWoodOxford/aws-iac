@@ -14,7 +14,7 @@ module "vpc" {
 
   count = var.create_vpc ? 1 : 0
 
-  name = var.name
+  name = local.resource_prefix
 
   cidr = var.vpc_cidr
   azs  = data.aws_availability_zones.az.names
@@ -24,7 +24,9 @@ module "vpc" {
   private_subnet_tags = {
     SubnetUsage = "private"
   }
+
   enable_nat_gateway = true
+  single_nat_gateway = true
 
   public_subnets       = local.public_subnets_ipv4
   public_subnet_suffix = "public"
