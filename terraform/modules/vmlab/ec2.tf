@@ -3,6 +3,10 @@ resource "aws_security_group" "vm_egress" {
   description = "Allow system updates"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags = merge(
     local.standard_tags,
     {
@@ -165,6 +169,10 @@ resource "aws_security_group" "alb" {
   name        = "${local.resource_prefix}-alb"
   description = "Application load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   tags = local.standard_tags
 }
