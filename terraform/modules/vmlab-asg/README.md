@@ -1,17 +1,12 @@
 ## Overview
 
-An AWS "lab" that containing EC2 instance(s) in public subnets.
+An AWS "lab" that containing an auto-scaling group (ASG) of EC2 instances in public subnets.
 The module accepts optional ingress rules from the control host. The instances can also 
 be connected via a Systems Manager SSM agent.
-
-WIP - an optional launch template / auto-scaling group (ASG), and an optional application load
-balancer (ALB) with a target group containing instances from either the ASG or those
-directly provisioned.
 
 The default behaviour is to use the default VPC in the current region. Otherwise a VPC
 is created with public and private subnets (with a single NAT Gateway and EIP).
 
-An S3 bucket is created for (future) logging.
 
 <!-- BEGIN_TF_DOCS -->
 ## Table of Contents
