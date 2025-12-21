@@ -33,8 +33,6 @@ An S3 bucket is created for (future) logging.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_control_host_ingress"></a> [control\_host\_ingress](#input\_control\_host\_ingress) | Ingress from control host | <pre>list(object({<br/>    description = string<br/>    from_port   = number<br/>    to_port     = number<br/>    protocol    = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_create_asg"></a> [create\_asg](#input\_create\_asg) | Create a launch template and ASG if true. | `bool` | `"false"` | no |
-| <a name="input_create_lb"></a> [create\_lb](#input\_create\_lb) | Create an application load balancer and target group containing the instances if true. Ignored if create\_asg is true. | `bool` | `"false"` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Create a VPC if true. Use the default VPC if false. | `bool` | `"false"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment, e.g. 'dev', 'example01' | `string` | `"env"` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances | `number` | `1` | no |
