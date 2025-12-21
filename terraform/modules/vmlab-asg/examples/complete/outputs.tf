@@ -3,14 +3,14 @@ output "control_host" {
   value       = module.vmlab.control_host
 }
 
-output "control_host_access" {
-  description = "Ingress on the instances from the control host"
-  value       = module.vmlab.control_host_ingress
+output "lb_endpoint" {
+  description = "DNS name of the load balancer"
+  value       = module.vmlab.lb_dns_name
 }
 
-output "instances_ipv4" {
-  description = "IPV4 addresses of the instance(s)"
-  value       = module.vmlab.instances_ipv4
+output "app_endpoint" {
+  description = "Application endpoint"
+  value       = "http://${module.vmlab.lb_dns_name}/"
 }
 
 output "vpc_id" {

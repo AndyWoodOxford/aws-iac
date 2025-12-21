@@ -3,14 +3,9 @@ output "control_host" {
   value       = local.control_host
 }
 
-output "control_host_ingress" {
-  description = "Ingress allowed from the control host"
-  value       = var.control_host_ingress
-}
-
-output "instances_ipv4" {
-  description = "IPV4 addresses of the instance(s)"
-  value       = aws_instance.vm[*].public_ip
+output "lb_dns_name" {
+  description = "DNS name of the load balancer"
+  value       = aws_lb.vmlab.dns_name
 }
 
 output "nat_gateway" {

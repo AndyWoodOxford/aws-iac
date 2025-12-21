@@ -1,9 +1,8 @@
 ## Overview
+Spins up an ASG in the default VPC. Instances are placed in a target group for an
+application load balancer.
 
-Spins up instance(s) in either the default VPC or a newly-created one. A userdata
-script starts an Apache webserver that services a basic message.
-Ingress rules are created for `ssh`, `http` and ICMP from the control host. Access via
-Systems Manager SSM agents is always supported.
+HTTP ingress is allowed into the instances. Access via SSM is supported.
 
 ## Usage
 To run this example you need to execute:
@@ -44,9 +43,9 @@ Run `terraform destroy` to clean up.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_app_endpoint"></a> [app\_endpoint](#output\_app\_endpoint) | Application endpoint |
 | <a name="output_control_host"></a> [control\_host](#output\_control\_host) | IPV4 of the control host (whitelisted on port 22) |
-| <a name="output_control_host_access"></a> [control\_host\_access](#output\_control\_host\_access) | Ingress on the instances from the control host |
-| <a name="output_instances_ipv4"></a> [instances\_ipv4](#output\_instances\_ipv4) | IPV4 addresses of the instance(s) |
+| <a name="output_lb_endpoint"></a> [lb\_endpoint](#output\_lb\_endpoint) | DNS name of the load balancer |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC id |
 
 ## Modules

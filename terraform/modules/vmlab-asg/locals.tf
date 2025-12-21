@@ -1,6 +1,4 @@
 locals {
-  account_id = data.aws_caller_identity.current.account_id
-
   ami_ids = {
     amazonlinux = data.aws_ami.amazonlinux2023.id
     debian      = data.aws_ami.debian13.id

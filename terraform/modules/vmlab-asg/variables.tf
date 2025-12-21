@@ -45,38 +45,10 @@ variable "instance_type" {
   }
 }
 
-variable "instance_count" {
-  type        = number
-  description = "Number of instances"
-  validation {
-    condition     = var.instance_count <= 5
-    error_message = "No more than 5 instances can be launched."
-  }
-  default = 1
-}
-
 variable "userdata" {
   type        = string
   description = "Path to a file containing EC2 userdata (plain text)."
   default     = null
-}
-
-variable "public_key_path" {
-  type        = string
-  description = "Path to the SSH public key file used to launch the instances"
-  default     = null
-}
-
-variable "create_lb" {
-  type        = bool
-  description = "Create an application load balancer and target group containing the instances if true. Ignored if create_asg is true."
-  default     = "false"
-}
-
-variable "create_asg" {
-  type        = bool
-  description = "Create a launch template and ASG if true."
-  default     = "false"
 }
 
 ### VPC

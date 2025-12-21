@@ -1,6 +1,6 @@
-resource "aws_security_group" "vm_egress" {
+resource "aws_security_group" "instance" {
   name        = "${var.name}-${var.environment}-egress"
-  description = "Allow system updates"
+  description = "Allow system updates and forwarding from load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
   lifecycle {
@@ -16,7 +16,7 @@ resource "aws_security_group" "vm_egress" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "http" {
-  security_group_id = aws_security_group.vm_egress.id
+  security_group_id = aws_security_group.instance.id
   ip_protocol       = "tcp"
   from_port         = 80
   to_port           = 80
@@ -26,11 +26,21 @@ resource "aws_vpc_security_group_egress_rule" "http" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "https" {
-  security_group_id = aws_security_group.vm_egress.id
+  security_group_id = aws_security_group.instance.id
   ip_protocol       = "tcp"
   from_port         = 443
   to_port           = 443
   cidr_ipv4         = "0.0.0.0/0"
+
+  tags = local.standard_tags
+}
+
+resource "aws_vpc_security_group_ingress_rule" "alb" {
+  security_group_id            = aws_security_group.instance.id
+  referenced_security_group_id = aws_security_group.alb.id
+  ip_protocol                  = "tcp"
+  from_port                    = 80
+  to_port                      = 80
 
   tags = local.standard_tags
 }
@@ -63,78 +73,76 @@ resource "aws_security_group" "control_host_ingress" {
   )
 }
 
-resource "aws_key_pair" "ansible" {
-  count      = var.public_key_path != null ? 1 : 0
-  key_name   = "${var.name}-${var.environment}"
-  public_key = file(var.public_key_path)
-
-  tags = local.standard_tags
-}
-
-resource "aws_instance" "vm" {
-  count = var.instance_count
-
-  ami           = local.ami_ids[var.platform]
-  instance_type = var.instance_type
-
-  key_name = var.public_key_path != null ? aws_key_pair.ansible[0].key_name : null
-
-  root_block_device {
-    volume_type           = "gp3"
-    volume_size           = 25
-    encrypted             = true
-    delete_on_termination = true
-  }
-
-  associate_public_ip_address = true
-  subnet_id = (
-    var.create_vpc ? module.vpc[0].public_subnets[count.index % length(module.vpc[0].public_subnets)]
-    : data.aws_subnets.default.ids[count.index % length(data.aws_subnets.default.ids)]
-  )
-
-  vpc_security_group_ids = [
-    aws_security_group.vm_egress.id,
-    aws_security_group.control_host_ingress.id
-  ]
-
-  iam_instance_profile = aws_iam_instance_profile.ssm.name
+resource "aws_security_group" "alb" {
+  name        = "${local.resource_prefix}-alb"
+  description = "Application load balancer"
+  vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
   lifecycle {
     create_before_destroy = true
   }
 
-  metadata_options {
-    http_tokens = "required"
-  }
-
-  user_data_base64 = var.userdata != null ? filebase64(var.userdata) : null
-
-  tags = merge(
-    local.standard_tags,
-    {
-      Name = (var.instance_count > 1
-        ? format("%s-%d", local.resource_prefix, count.index + 1)
-        : local.resource_prefix
-      )
-    }
-  )
-
-  volume_tags = merge(local.standard_tags,
-    {
-      Name = (var.instance_count > 1
-        ? format("%s-%d", local.resource_prefix, count.index + 1)
-        : local.resource_prefix
-      )
-    }
-  )
+  tags = local.standard_tags
 }
 
-#-----------------------
-# Experimentation with load balancer, target group and ASG
-resource "aws_launch_template" "vmlab" {
-  count = var.create_asg ? 1 : 0
+resource "aws_vpc_security_group_ingress_rule" "http" {
+  security_group_id = aws_security_group.alb.id
+  ip_protocol       = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_ipv4         = "${local.control_host}/32"
 
-  name = local.resource_prefix
+  tags = local.standard_tags
+}
+
+resource "aws_vpc_security_group_egress_rule" "forwarding" {
+  security_group_id = aws_security_group.alb.id
+  ip_protocol       = "tcp"
+  from_port         = 80
+  to_port           = 80
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+#tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
+resource "aws_lb" "vmlab" {
+  name               = var.name
+  load_balancer_type = "application"
+  internal           = false
+
+  subnets = (
+    var.create_vpc ? module.vpc[0].public_subnets : data.aws_subnets.default.ids
+  )
+  security_groups            = [aws_security_group.alb.id]
+  drop_invalid_header_fields = true
+  tags                       = local.standard_tags
+}
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.vmlab.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.vmlab.arn
+  }
+}
+
+resource "aws_lb_target_group" "vmlab" {
+  name     = var.name
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
+}
+
+resource "aws_autoscaling_attachment" "vmlab" {
+  autoscaling_group_name = aws_autoscaling_group.vmlab.id
+  lb_target_group_arn    = aws_lb_target_group.vmlab.arn
+}
+
+resource "aws_launch_template" "vmlab" {
+  name        = local.resource_prefix
+  description = "Tentative launch template for a 'VM Lab'"
 
   image_id      = local.ami_ids[var.platform]
   instance_type = var.instance_type
@@ -144,7 +152,7 @@ resource "aws_launch_template" "vmlab" {
   ebs_optimized = true
 
   vpc_security_group_ids = [
-    aws_security_group.vm_egress.id,
+    aws_security_group.instance.id,
     aws_security_group.control_host_ingress.id
   ]
 
@@ -163,54 +171,28 @@ resource "aws_launch_template" "vmlab" {
   tags = local.standard_tags
 }
 
-resource "aws_security_group" "alb" {
-  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
+resource "aws_autoscaling_group" "vmlab" {
+  name = local.resource_prefix
 
-  name        = "${local.resource_prefix}-alb"
-  description = "Application load balancer"
-  vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
-
-  lifecycle {
-    create_before_destroy = true
+  launch_template {
+    id      = aws_launch_template.vmlab.id
+    version = "$Latest"
   }
 
-  tags = local.standard_tags
-}
+  max_size         = 3
+  min_size         = 1
+  desired_capacity = 2
 
-resource "aws_vpc_security_group_ingress_rule" "http" {
-  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
+  availability_zones = data.aws_availability_zones.az.names
 
-  security_group_id = aws_security_group.alb[0].id
-  ip_protocol       = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_ipv4         = "${local.control_host}/32"
+  force_delete = true
 
-  tags = local.standard_tags
-}
-
-
-#tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
-resource "aws_lb" "vmlab" {
-  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
-
-  name               = var.name
-  load_balancer_type = "application"
-  internal           = false
-
-  subnets = (
-    var.create_vpc ? module.vpc[0].public_subnets : data.aws_subnets.default.ids
-  )
-  security_groups            = [aws_security_group.alb[0].id]
-  drop_invalid_header_fields = true
-  tags                       = local.standard_tags
-}
-
-resource "aws_lb_target_group" "vmlab" {
-  count = var.create_asg ? 1 : (var.create_lb ? 1 : 0)
-
-  name     = var.name
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
+  dynamic "tag" {
+    for_each = var.tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
 }
