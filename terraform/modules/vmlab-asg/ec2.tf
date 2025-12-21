@@ -188,7 +188,7 @@ resource "aws_autoscaling_group" "vmlab" {
   force_delete = true
 
   dynamic "tag" {
-    for_each = var.tags
+    for_each = local.standard_tags
     content {
       key                 = tag.key
       value               = tag.value
