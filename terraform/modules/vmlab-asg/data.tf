@@ -1,6 +1,4 @@
-# Account
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
+data "aws_default_tags" "current" {}
 
 # EC2
 data "aws_ami" "amazonlinux2023" {
