@@ -1,8 +1,17 @@
+provider "aws" {
+  default_tags {
+    tags = {
+      example   = "complete"
+      module    = "vmlab-asg"
+      terraform = "true"
+    }
+  }
+}
+
 locals {
   env = "complete"
   tags = {
-    example = "complete"
-    name    = "example-${local.env}"
+    name = "example-${local.env}"
   }
 }
 
@@ -13,7 +22,7 @@ module "vmlab" {
   environment = local.env
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
-  create_vpc = "false"
+  create_vpc = "true"
 
   # Ubuntu AMI
   platform = "ubuntu"

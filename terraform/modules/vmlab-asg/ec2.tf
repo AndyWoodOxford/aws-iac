@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance" {
-  name        = "${var.name}-${var.environment}-egress"
+  name        = "${var.name}-${var.environment}-instance"
   description = "Allow system updates and forwarding from load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -10,7 +10,7 @@ resource "aws_security_group" "instance" {
   tags = merge(
     local.standard_tags,
     {
-      Name = "${local.resource_prefix}-egress"
+      Name = "${local.resource_prefix}-instance"
     }
   )
 }
@@ -82,7 +82,12 @@ resource "aws_security_group" "alb" {
     create_before_destroy = true
   }
 
-  tags = local.standard_tags
+  tags = merge(
+    local.standard_tags,
+    {
+      Name = "${local.resource_prefix}-alb"
+    }
+  )
 }
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
@@ -174,23 +179,33 @@ resource "aws_launch_template" "vmlab" {
 }
 
 resource "aws_autoscaling_group" "vmlab" {
-  name = local.resource_prefix
+  name_prefix = local.resource_prefix
 
   launch_template {
     id      = aws_launch_template.vmlab.id
-    version = "$Latest"
+    version = aws_launch_template.vmlab.latest_version
   }
 
-  max_size         = 3
-  min_size         = 1
+  max_size = 3
+  min_size = 1
 
-  availability_zones = data.aws_availability_zones.az.names
+  vpc_zone_identifier = (
+    var.create_vpc ? module.vpc[0].public_subnets : data.aws_subnets.default.ids
+  )
 
   health_check_type = "ELB"
 
   lifecycle {
-    ignore_changes = [desired_capacity, target_group_arns]
+    ignore_changes = [
+      desired_capacity,
+      target_group_arns
+    ]
   }
+
+  termination_policies = [
+    "ClosestToNextInstanceHour",
+    "OldestInstance"
+  ]
 
   force_delete = true
 

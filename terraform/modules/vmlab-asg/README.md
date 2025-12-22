@@ -46,6 +46,7 @@ is created with public and private subnets (with a single NAT Gateway and EIP).
 
 | Name | Description |
 |------|-------------|
+| <a name="output_asg_name"></a> [asg\_name](#output\_asg\_name) | Name of the ASG |
 | <a name="output_control_host"></a> [control\_host](#output\_control\_host) | IPV4 of the control host (whitelisted on port 22) |
 | <a name="output_lb_dns_name"></a> [lb\_dns\_name](#output\_lb\_dns\_name) | DNS name of the load balancer |
 | <a name="output_nat_gateway"></a> [nat\_gateway](#output\_nat\_gateway) | NAT gateway id |

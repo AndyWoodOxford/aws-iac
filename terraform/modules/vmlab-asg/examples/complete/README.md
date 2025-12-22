@@ -44,6 +44,7 @@ Run `terraform destroy` to clean up.
 | Name | Description |
 |------|-------------|
 | <a name="output_app_endpoint"></a> [app\_endpoint](#output\_app\_endpoint) | Application endpoint |
+| <a name="output_asg_name"></a> [asg\_name](#output\_asg\_name) | Name of the auto-scaling group |
 | <a name="output_control_host"></a> [control\_host](#output\_control\_host) | IPV4 of the control host (whitelisted on port 22) |
 | <a name="output_lb_endpoint"></a> [lb\_endpoint](#output\_lb\_endpoint) | DNS name of the load balancer |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC id |

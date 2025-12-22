@@ -1,3 +1,8 @@
+output "asg_name" {
+  description = "Name of the auto-scaling group"
+  value       = module.vmlab.asg_name
+}
+
 output "control_host" {
   description = "IPV4 of the control host (whitelisted on port 22)"
   value       = module.vmlab.control_host

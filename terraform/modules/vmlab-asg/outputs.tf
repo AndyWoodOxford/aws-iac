@@ -1,3 +1,8 @@
+output "asg_name" {
+  description = "Name of the ASG"
+  value       = aws_autoscaling_group.vmlab.name
+}
+
 output "control_host" {
   description = "IPV4 of the control host (whitelisted on port 22)"
   value       = local.control_host
