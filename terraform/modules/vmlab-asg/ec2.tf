@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance" {
-  name        = "${var.name}-${var.environment}-instance"
+  name        = "${local.resource_prefix}-instance"
   description = "Allow system updates and forwarding from load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -46,7 +46,7 @@ resource "aws_vpc_security_group_ingress_rule" "alb" {
 }
 
 resource "aws_security_group" "control_host_ingress" {
-  name        = "${var.name}-${var.environment}-ingress"
+  name        = "${local.resource_prefix}-ingress"
   description = "Allow access from the control host"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -112,7 +112,7 @@ resource "aws_vpc_security_group_egress_rule" "forwarding" {
 
 #tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
 resource "aws_lb" "vmlab" {
-  name               = var.name
+  name               = local.resource_prefix
   load_balancer_type = "application"
   internal           = false
 
@@ -136,7 +136,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_target_group" "vmlab" {
-  name     = var.name
+  name     = local.resource_prefix
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id

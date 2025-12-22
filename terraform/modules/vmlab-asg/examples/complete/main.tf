@@ -9,17 +9,14 @@ provider "aws" {
 }
 
 locals {
-  env = "complete"
-  tags = {
-    name = "example-${local.env}"
-  }
+  name = "vmlab"
 }
 
 module "vmlab" {
   source = "../.."
 
-  name        = var.name
-  environment = local.env
+  name        = local.name
+  environment = var.env
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
   create_vpc = "false"
@@ -35,6 +32,4 @@ module "vmlab" {
     { from_port = 8, to_port = 0, protocol = "icmp", description = "ping" },
     { from_port = 80, to_port = 80, protocol = "tcp", description = "Apache Webserver" },
   ]
-
-  tags = local.tags
 }

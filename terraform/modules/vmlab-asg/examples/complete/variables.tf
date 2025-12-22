@@ -1,5 +1,5 @@
-variable "name" {
+variable "env" {
   type        = string
-  description = "Used to name resources"
-  default     = "example"
+  description = "'Environment' - used to name resources"
+  default     = "complete"
 }
