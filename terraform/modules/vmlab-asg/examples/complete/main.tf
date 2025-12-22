@@ -2,7 +2,7 @@ locals {
   env = "complete"
   tags = {
     example = "complete"
-    Name    = "example-${local.env}"
+    name    = "example-${local.env}"
   }
 }
 

@@ -100,7 +100,9 @@ resource "aws_vpc_security_group_egress_rule" "forwarding" {
   ip_protocol       = "tcp"
   from_port         = 80
   to_port           = 80
-  cidr_ipv4         = "0.0.0.0/0"
+  cidr_ipv4         = (
+    var.create_vpc ? module.vpc[0].vpc_cidr_block : data.aws_vpc.default.cidr_block
+  )
 }
 
 #tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
@@ -185,7 +187,17 @@ resource "aws_autoscaling_group" "vmlab" {
 
   availability_zones = data.aws_availability_zones.az.names
 
-  force_delete = true
+  health_check_type = "ELB"
+
+  lifecycle {
+    ignore_changes = [desired_capacity, target_group_arns]
+  }
+
+  tag {
+    key                 = "Name"
+    value               = local.resource_prefix
+    propagate_at_launch = true
+  }
 
   dynamic "tag" {
     for_each = local.standard_tags
