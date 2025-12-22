@@ -100,7 +100,7 @@ resource "aws_vpc_security_group_egress_rule" "forwarding" {
   ip_protocol       = "tcp"
   from_port         = 80
   to_port           = 80
-  cidr_ipv4         = (
+  cidr_ipv4 = (
     var.create_vpc ? module.vpc[0].vpc_cidr_block : data.aws_vpc.default.cidr_block
   )
 }
@@ -183,7 +183,6 @@ resource "aws_autoscaling_group" "vmlab" {
 
   max_size         = 3
   min_size         = 1
-  desired_capacity = 2
 
   availability_zones = data.aws_availability_zones.az.names
 
@@ -192,6 +191,8 @@ resource "aws_autoscaling_group" "vmlab" {
   lifecycle {
     ignore_changes = [desired_capacity, target_group_arns]
   }
+
+  force_delete = true
 
   tag {
     key                 = "Name"
@@ -206,5 +207,29 @@ resource "aws_autoscaling_group" "vmlab" {
       value               = tag.value
       propagate_at_launch = true
     }
+  }
+}
+
+resource "aws_autoscaling_policy" "scale_down" {
+  name                   = "scale_down"
+  autoscaling_group_name = aws_autoscaling_group.vmlab.name
+  adjustment_type        = "ChangeInCapacity"
+  scaling_adjustment     = -1
+  cooldown               = 120
+}
+
+resource "aws_cloudwatch_metric_alarm" "scale_down" {
+  alarm_name          = "scale_down"
+  alarm_description   = "Monitors CPU for Apache servers"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  namespace           = "AWS/EC2"
+  metric_name         = "CPUUtilisation"
+  threshold           = "20"
+  evaluation_periods  = "2"
+  period              = "120"
+  statistic           = "Average"
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.vmlab.name
   }
 }
