@@ -22,7 +22,7 @@ module "vmlab" {
   environment = local.env
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
-  create_vpc = "true"
+  create_vpc = "false"
 
   # Ubuntu AMI
   platform = "ubuntu"
