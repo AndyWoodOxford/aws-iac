@@ -9,7 +9,7 @@ provider "aws" {
 }
 
 locals {
-  name = "vmlab"
+  name = "vmlab-asg"
 }
 
 module "vmlab" {

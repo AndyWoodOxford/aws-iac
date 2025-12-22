@@ -38,7 +38,7 @@ Run `terraform destroy` to clean up.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | Used to name resources | `string` | `"example"` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Used to name resources | `string` | `"complete"` | no |
 
 ## Outputs
 

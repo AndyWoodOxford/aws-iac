@@ -1,5 +1,5 @@
 resource "aws_security_group" "vm_egress" {
-  name        = "${var.name}-${var.environment}-egress"
+  name        = "${local.resource_prefix}-egress"
   description = "Allow system updates"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -36,7 +36,7 @@ resource "aws_vpc_security_group_egress_rule" "https" {
 }
 
 resource "aws_security_group" "control_host_ingress" {
-  name        = "${var.name}-${var.environment}-ingress"
+  name        = "${local.resource_prefix}-ingress"
   description = "Allow access from the control host"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -83,6 +83,7 @@ resource "aws_instance" "vm" {
     volume_type           = "gp3"
     volume_size           = 25
     encrypted             = true
+    kms_key_id            = aws_kms_key.encryptor.id
     delete_on_termination = true
   }
 
@@ -107,7 +108,8 @@ resource "aws_instance" "vm" {
     http_tokens = "required"
   }
 
-  user_data_base64 = var.userdata != null ? filebase64(var.userdata) : null
+  user_data_base64            = var.userdata != null ? filebase64(var.userdata) : null
+  user_data_replace_on_change = true
 
   tags = merge(
     local.standard_tags,
