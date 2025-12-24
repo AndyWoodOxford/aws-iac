@@ -8,6 +8,23 @@ provider "aws" {
   }
 }
 
+resource "random_password" "pwd" {
+  length = 24
+}
+
+resource "aws_secretsmanager_secret" "creds" {
+  name = "my_secret"
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "creds" {
+  secret_id = aws_secretsmanager_secret.creds.id
+  secret_string = jsonencode({
+    username = "me"
+    password = random_password.pwd.result
+  })
+}
+
 locals {
   name = "vmlab"
 }
