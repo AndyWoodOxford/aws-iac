@@ -1,4 +1,7 @@
 provider "aws" {
+  alias = "uk"
+  region = "eu-west-2"
+
   default_tags {
     tags = {
       example   = "complete"
@@ -8,21 +11,22 @@ provider "aws" {
   }
 }
 
-resource "random_password" "pwd" {
-  length = 24
+provider "aws" {
+  alias = "ireland"
+  region = "eu-west-1"
 }
 
-resource "aws_secretsmanager_secret" "creds" {
-  name = "my_secret"
-  recovery_window_in_days = 0
+data "aws_region" "london" {}
+data "aws_region" "dublin" {
+  provider = aws.ireland
 }
 
-resource "aws_secretsmanager_secret_version" "creds" {
-  secret_id = aws_secretsmanager_secret.creds.id
-  secret_string = jsonencode({
-    username = "me"
-    password = random_password.pwd.result
-  })
+output "foo" {
+  value = data.aws_region.london.name
+}
+
+output "bar" {
+  value = data.aws_region.dublin.name
 }
 
 locals {
