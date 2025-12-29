@@ -18,17 +18,16 @@ module "vmlab" {
   source = "../.."
 
   name        = local.name
-  environment = var.environment
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
-  create_vpc = "false"
+  create_vpc = "true"
 
   # spin up one Ubuntu instance
   instance_count = 1
   platform       = "ubuntu"
 
   # basic webserver
-  #userdata = "${path.module}/userdata_ubuntu.sh"
+  userdata = "${path.module}/userdata-ubuntu.sh"
 
   # allow ingress for ssh, http and ping
   control_host_ingress = [

@@ -33,7 +33,6 @@ is created with public and private subnets (with a single NAT Gateway and EIP).
 |------|-------------|------|---------|:--------:|
 | <a name="input_control_host_ingress"></a> [control\_host\_ingress](#input\_control\_host\_ingress) | Ingress from control host | <pre>list(object({<br/>    description = string<br/>    from_port   = number<br/>    to_port     = number<br/>    protocol    = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Create a VPC if true. Use the default VPC if false. | `bool` | `"false"` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment, e.g. 'dev', 'example01' | `string` | `"env"` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance | `string` | `"t2.micro"` | no |
 | <a name="input_name"></a> [name](#input\_name) | All resources will use this as a Name, or as a prefix to the Name | `string` | `"vmlab"` | no |
 | <a name="input_platform"></a> [platform](#input\_platform) | EC2 VM platform | `string` | `"ubuntu"` | no |

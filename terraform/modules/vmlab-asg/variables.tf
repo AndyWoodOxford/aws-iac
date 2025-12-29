@@ -1,13 +1,3 @@
-variable "environment" {
-  type        = string
-  description = "The name of the environment, e.g. 'dev', 'example01'"
-  validation {
-    condition     = can(regex("^[a-z0-9]+$", var.environment))
-    error_message = "The 'environment_name' variable can contain only lower case letters or numbers."
-  }
-  default = "env"
-}
-
 variable "name" {
   type        = string
   description = "All resources will use this as a Name, or as a prefix to the Name"

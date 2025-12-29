@@ -9,24 +9,22 @@ provider "aws" {
 }
 
 locals {
-  name = "vmlab-ash-${basename(path.cwd)}"
-
+  name = "vmlab-asg-${basename(path.cwd)}"
 }
 
 module "vmlab" {
   source = "../.."
 
-  name        = local.name
-  environment = var.env
+  name = local.name
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
-  create_vpc = "false"
+  create_vpc = "true"
 
   # Ubuntu AMI
   platform = "ubuntu"
 
   # basic webserver
-  userdata = "${path.module}/userdata_ubuntu.sh"
+  userdata = "${path.module}/userdata-ubuntu.sh"
 
   # allow ingress for http and ping
   control_host_ingress = [
