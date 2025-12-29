@@ -1,5 +1,4 @@
 provider "aws" {
-  alias = "uk"
   region = "eu-west-2"
 
   default_tags {
@@ -11,26 +10,8 @@ provider "aws" {
   }
 }
 
-provider "aws" {
-  alias = "ireland"
-  region = "eu-west-1"
-}
-
-data "aws_region" "london" {}
-data "aws_region" "dublin" {
-  provider = aws.ireland
-}
-
-output "foo" {
-  value = data.aws_region.london.name
-}
-
-output "bar" {
-  value = data.aws_region.dublin.name
-}
-
 locals {
-  name = "vmlab"
+  name = "vmlab-${basename(path.cwd)}"
 }
 
 module "vmlab" {

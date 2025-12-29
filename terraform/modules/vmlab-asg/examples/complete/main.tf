@@ -9,7 +9,8 @@ provider "aws" {
 }
 
 locals {
-  name = "vmlab-asg"
+  name = "vmlab-ash-${basename(path.cwd)}"
+
 }
 
 module "vmlab" {
