@@ -51,11 +51,7 @@ variable "create_vpc" {
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the non-default VPC"
-  validation {
-    condition     = var.vpc_cidr >= 16 && var.vpc_cidr <= 28
-    error_message = "The VPC CIDR must be in the range 16 to 28."
-  }
-  default = "192.168.255.0/24"
+  default     = "192.168.0.0/16"
 }
 
 variable "subnet_cidr_mask" {
