@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance" {
-  name        = "${local.resource_prefix}-instance"
+  name        = "${var.name}-instance"
   description = "Allow system updates and forwarding from load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -10,7 +10,7 @@ resource "aws_security_group" "instance" {
   tags = merge(
     local.standard_tags,
     {
-      Name = "${local.resource_prefix}-instance"
+      Name = "${var.name}-instance"
     }
   )
 }
@@ -46,7 +46,7 @@ resource "aws_vpc_security_group_ingress_rule" "alb" {
 }
 
 resource "aws_security_group" "control_host_ingress" {
-  name        = "${local.resource_prefix}-ingress"
+  name        = "${var.name}-ingress"
   description = "Allow access from the control host"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -68,13 +68,13 @@ resource "aws_security_group" "control_host_ingress" {
   tags = merge(
     local.standard_tags,
     {
-      Name = "${local.resource_prefix}-control-host"
+      Name = "${var.name}-control-host"
     }
   )
 }
 
 resource "aws_security_group" "alb" {
-  name        = "${local.resource_prefix}-alb"
+  name        = "${var.name}-alb"
   description = "Application load balancer"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -85,7 +85,7 @@ resource "aws_security_group" "alb" {
   tags = merge(
     local.standard_tags,
     {
-      Name = "${local.resource_prefix}-alb"
+      Name = "${var.name}-alb"
     }
   )
 }
@@ -112,7 +112,7 @@ resource "aws_vpc_security_group_egress_rule" "forwarding" {
 
 #tfsec:ignore:aws-elb-alb-not-public    # accessible from my IPV4
 resource "aws_lb" "vmlab" {
-  name               = local.resource_prefix
+  name               = var.name
   load_balancer_type = "application"
   internal           = false
 
@@ -136,7 +136,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_target_group" "vmlab" {
-  name     = local.resource_prefix
+  name     = var.name
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
@@ -148,7 +148,7 @@ resource "aws_autoscaling_attachment" "vmlab" {
 }
 
 resource "aws_launch_template" "vmlab" {
-  name        = local.resource_prefix
+  name        = var.name
   description = "Tentative launch template for a 'VM Lab'"
 
   image_id      = local.ami_ids[var.platform]
@@ -179,7 +179,7 @@ resource "aws_launch_template" "vmlab" {
 }
 
 resource "aws_autoscaling_group" "vmlab" {
-  name_prefix = local.resource_prefix
+  name_prefix = var.name
 
   launch_template {
     id      = aws_launch_template.vmlab.id
@@ -211,7 +211,7 @@ resource "aws_autoscaling_group" "vmlab" {
 
   tag {
     key                 = "Name"
-    value               = local.resource_prefix
+    value               = var.name
     propagate_at_launch = true
   }
 

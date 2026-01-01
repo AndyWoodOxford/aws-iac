@@ -17,12 +17,9 @@ locals {
 
   standard_tags = merge(
     {
-      environment = var.environment
       remote_user = local.remote_users[var.platform]
       terraform   = true
     },
     var.tags
   )
-
-  resource_prefix = "${var.name}-${var.environment}"
 }

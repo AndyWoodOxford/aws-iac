@@ -14,7 +14,7 @@ module "vpc" {
 
   count = var.create_vpc ? 1 : 0
 
-  name = local.resource_prefix
+  name = var.name
 
   cidr = var.vpc_cidr
   azs  = data.aws_availability_zones.az.names

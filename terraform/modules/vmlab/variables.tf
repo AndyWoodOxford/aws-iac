@@ -1,13 +1,3 @@
-variable "environment" {
-  type        = string
-  description = "The name of the environment, e.g. 'dev', 'example01'"
-  validation {
-    condition     = can(regex("^[a-z0-9]+$", var.environment))
-    error_message = "The 'environment_name' variable can contain only lower case letters or numbers."
-  }
-  default = "env"
-}
-
 variable "name" {
   type        = string
   description = "All resources will use this as a Name, or as a prefix to the Name"
@@ -77,17 +67,17 @@ variable "create_vpc" {
 variable "vpc_cidr" {
   type        = string
   description = "CIDR block for the non-default VPC"
-  default     = "10.0.0.0/16"
+  default     = "192.168.0.0/16"
 }
 
 variable "subnet_cidr_mask" {
   type        = number
-  description = "CIDR mask, e.g. /27 gives 27 (32 - 5)usable addresses"
+  description = "CIDR mask, e.g. /28 gives 11 (16 - 5) usable addresses"
   validation {
-    condition     = var.subnet_cidr_mask > 16 && var.subnet_cidr_mask <= 28
-    error_message = "The CIDR subnet mask must be in the range 17 to 28."
+    condition     = var.subnet_cidr_mask >= 16 && var.subnet_cidr_mask <= 28
+    error_message = "The CIDR subnet mask must be in the range 16 to 28."
   }
-  default = 27
+  default = 28
 }
 
 variable "control_host_ingress" {

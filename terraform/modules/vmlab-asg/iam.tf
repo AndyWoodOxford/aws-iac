@@ -1,6 +1,6 @@
 # Systems Manager SSM
 resource "aws_iam_role" "ssm" {
-  name = join("-", [local.resource_prefix, "ssm"])
+  name = join("-", [var.name, "ssm"])
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -21,8 +21,8 @@ resource "aws_iam_role" "ssm" {
 # SSM connections
 resource "aws_iam_role_policy_attachment" "ssm" {
   for_each = toset([
-    data.aws_iam_policy.AmazonCloudWatchAgentServerPolicy.arn,
-    data.aws_iam_policy.AmazonSSMManagedInstanceCorePolicy.arn
+    data.aws_iam_policy.cloudwatch.arn,
+    data.aws_iam_policy.ssm.arn
   ])
 
   role       = aws_iam_role.ssm.name
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 }
 
 resource "aws_iam_instance_profile" "ssm" {
-  name = join("-", [local.resource_prefix, "-ssm"])
+  name = join("-", [var.name, "-ssm"])
   role = aws_iam_role.ssm.name
 
   tags = local.standard_tags

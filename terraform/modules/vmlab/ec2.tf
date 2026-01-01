@@ -1,5 +1,5 @@
 resource "aws_security_group" "vm_egress" {
-  name        = "${local.resource_prefix}-egress"
+  name        = "${var.name}-egress"
   description = "Allow system updates"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -10,7 +10,7 @@ resource "aws_security_group" "vm_egress" {
   tags = merge(
     local.standard_tags,
     {
-      Name = "${local.resource_prefix}-egress"
+      Name = "${var.name}-egress"
     }
   )
 }
@@ -36,7 +36,7 @@ resource "aws_vpc_security_group_egress_rule" "https" {
 }
 
 resource "aws_security_group" "control_host_ingress" {
-  name        = "${local.resource_prefix}-ingress"
+  name        = "${var.name}-ingress"
   description = "Allow access from the control host"
   vpc_id      = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
 
@@ -58,14 +58,14 @@ resource "aws_security_group" "control_host_ingress" {
   tags = merge(
     local.standard_tags,
     {
-      Name = "${local.resource_prefix}-control-host"
+      Name = "${var.name}-control-host"
     }
   )
 }
 
 resource "aws_key_pair" "ansible" {
   count      = var.public_key_path != null ? 1 : 0
-  key_name   = "${var.name}-${var.environment}"
+  key_name   = var.name
   public_key = file(var.public_key_path)
 
   tags = local.standard_tags
@@ -88,6 +88,7 @@ resource "aws_instance" "vm" {
   }
 
   associate_public_ip_address = true
+
   subnet_id = (
     var.create_vpc ? module.vpc[0].public_subnets[count.index % length(module.vpc[0].public_subnets)]
     : data.aws_subnets.default.ids[count.index % length(data.aws_subnets.default.ids)]
@@ -115,8 +116,8 @@ resource "aws_instance" "vm" {
     local.standard_tags,
     {
       Name = (var.instance_count > 1
-        ? format("%s-%d", local.resource_prefix, count.index + 1)
-        : local.resource_prefix
+        ? format("%s-%d", var.name, count.index + 1)
+        : var.name
       )
     }
   )
@@ -124,8 +125,8 @@ resource "aws_instance" "vm" {
   volume_tags = merge(local.standard_tags,
     {
       Name = (var.instance_count > 1
-        ? format("%s-%d", local.resource_prefix, count.index + 1)
-        : local.resource_prefix
+        ? format("%s-%d", var.name, count.index + 1)
+        : var.name
       )
     }
   )

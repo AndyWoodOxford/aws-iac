@@ -5,6 +5,11 @@ resource "aws_kms_key" "encryptor" {
   deletion_window_in_days = 7
 }
 
+resource "aws_kms_alias" "encryption_key" {
+  name          = "alias/${var.name}"
+  target_key_id = aws_kms_key.encryptor.key_id
+}
+
 resource "aws_kms_key_policy" "encryptor" {
   key_id = aws_kms_key.encryptor.id
   policy = jsonencode({
@@ -36,9 +41,4 @@ resource "aws_kms_key_policy" "encryptor" {
       }
     ]
   })
-}
-
-resource "aws_kms_alias" "encryption_key" {
-  name          = "alias/${local.resource_prefix}"
-  target_key_id = aws_kms_key.encryptor.key_id
 }
