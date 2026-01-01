@@ -1,3 +1,4 @@
+# tflint-ignore: terraform_unused_declarations  # implicit usage
 data "aws_default_tags" "current" {}
 
 # EC2

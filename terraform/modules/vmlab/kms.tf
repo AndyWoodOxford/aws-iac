@@ -2,7 +2,7 @@ resource "aws_kms_key" "encryptor" {
   description             = "General encryption e.g. S3 data"
   key_usage               = "ENCRYPT_DECRYPT"
   enable_key_rotation     = true
-  deletion_window_in_days = 0
+  deletion_window_in_days = 7
 }
 
 resource "aws_kms_alias" "encryption_key" {

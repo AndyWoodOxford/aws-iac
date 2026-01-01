@@ -1,7 +1,9 @@
-# Account
+# Account / General
 data "aws_caller_identity" "current" {}
-data "aws_default_tags" "current" {}
 data "aws_region" "current" {}
+
+# tflint-ignore: terraform_unused_declarations  # implicit usage
+data "aws_default_tags" "current" {}
 
 # EC2
 data "aws_ami" "amazonlinux2023" {
