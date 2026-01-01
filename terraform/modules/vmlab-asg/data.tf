@@ -38,11 +38,11 @@ data "aws_ami" "ubuntu" {
 }
 
 # IAM
-data "aws_iam_policy" "AmazonSSMManagedInstanceCorePolicy" {
+data "aws_iam_policy" "ssm" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-data "aws_iam_policy" "AmazonCloudWatchAgentServerPolicy" {
+data "aws_iam_policy" "cloudwatch" {
   arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 

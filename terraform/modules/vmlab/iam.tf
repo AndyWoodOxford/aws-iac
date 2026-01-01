@@ -21,8 +21,8 @@ resource "aws_iam_role" "ssm" {
 # SSM connections
 resource "aws_iam_role_policy_attachment" "ssm" {
   for_each = toset([
-    data.aws_iam_policy.AmazonCloudWatchAgentServerPolicy.arn,
-    data.aws_iam_policy.AmazonSSMManagedInstanceCorePolicy.arn
+    data.aws_iam_policy.cloudwatch.arn,
+    data.aws_iam_policy.ssm.arn
   ])
 
   role       = aws_iam_role.ssm.name

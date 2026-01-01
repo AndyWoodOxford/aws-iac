@@ -17,7 +17,7 @@ locals {
 module "vmlab" {
   source = "../.."
 
-  name        = local.name
+  name = local.name
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
   create_vpc = "true"

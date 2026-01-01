@@ -21,9 +21,9 @@ resource "aws_kms_key_policy" "encryptor" {
         Resource = "*"
       },
       {
-        Sid = "Allow access for Key Administrators",
+        Sid    = "Allow access for Key Administrators",
         Effect = "Allow",
-        "Principal": {
+        "Principal" : {
           "AWS" = "arn:aws:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
         },
         Action = [

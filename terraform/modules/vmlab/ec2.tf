@@ -88,6 +88,7 @@ resource "aws_instance" "vm" {
   }
 
   associate_public_ip_address = true
+
   subnet_id = (
     var.create_vpc ? module.vpc[0].public_subnets[count.index % length(module.vpc[0].public_subnets)]
     : data.aws_subnets.default.ids[count.index % length(data.aws_subnets.default.ids)]
