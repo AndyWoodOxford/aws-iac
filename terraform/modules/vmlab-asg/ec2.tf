@@ -193,8 +193,9 @@ resource "aws_autoscaling_group" "vmlab" {
     version = aws_launch_template.vmlab.latest_version
   }
 
-  max_size = var.asg_max_size
-  min_size = var.asg_min_size
+  max_size         = var.asg_max_size
+  min_size         = var.asg_min_size
+  desired_capacity = floor(var.asg_min_size + var.asg_min_size / 2)
 
   vpc_zone_identifier = (
     var.create_vpc ? module.vpc[0].public_subnets : data.aws_subnets.default.ids
@@ -203,14 +204,20 @@ resource "aws_autoscaling_group" "vmlab" {
   health_check_type = "ELB"
 
   lifecycle {
-    precondition {
-      condition     = var.asg_max_size <= local.asg_max_size
-      error_message = "No more than ${local.asg_max_size} instances can be spun up!"
-    }
     ignore_changes = [
       desired_capacity,
       target_group_arns
     ]
+
+    precondition {
+      condition     = var.asg_max_size <= local.asg_max_size
+      error_message = "No more than ${local.asg_max_size} instances can be spun up!"
+    }
+
+    postcondition {
+      condition     = length(self.availability_zones) > 1
+      error_message = "More that 1 A/Z must be used for high availability!"
+    }
   }
 
   termination_policies = [
