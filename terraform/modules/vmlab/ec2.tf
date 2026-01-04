@@ -103,6 +103,10 @@ resource "aws_instance" "vm" {
 
   lifecycle {
     create_before_destroy = true
+    precondition {
+      condition     = data.aws_ec2_instance_type.vm.free_tier_eligible
+      error_message = "${var.instance_type} is not part of the AWS free tier!"
+    }
   }
 
   metadata_options {

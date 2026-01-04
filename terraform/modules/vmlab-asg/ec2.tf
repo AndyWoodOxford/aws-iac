@@ -175,6 +175,13 @@ resource "aws_launch_template" "vmlab" {
     enabled = "true"
   }
 
+  lifecycle {
+    precondition {
+      condition     = data.aws_ec2_instance_type.vm.free_tier_eligible
+      error_message = "${var.instance_type} is not part of the AWS free tier!"
+    }
+  }
+
   tags = local.standard_tags
 }
 
@@ -186,8 +193,8 @@ resource "aws_autoscaling_group" "vmlab" {
     version = aws_launch_template.vmlab.latest_version
   }
 
-  max_size = 3
-  min_size = 1
+  max_size = var.asg_max_size
+  min_size = var.asg_min_size
 
   vpc_zone_identifier = (
     var.create_vpc ? module.vpc[0].public_subnets : data.aws_subnets.default.ids
@@ -196,6 +203,10 @@ resource "aws_autoscaling_group" "vmlab" {
   health_check_type = "ELB"
 
   lifecycle {
+    precondition {
+      condition     = var.asg_max_size <= local.asg_max_size
+      error_message = "No more than ${local.asg_max_size} instances can be spun up!"
+    }
     ignore_changes = [
       desired_capacity,
       target_group_arns
