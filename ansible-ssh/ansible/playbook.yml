@@ -1,10 +1,13 @@
 ---
 - name: Simple playbook to demonstrate EC2 connections over ssh
-  hosts: "tag_application_{{ application | replace('-', '_') }}:&tag_environment_{{ environment_name | replace('-', '_') }}"
+  hosts: "tag_example_{{ example }}:&tag_module_{{ module }}"  # assumes no hyphens
   any_errors_fatal: true
 
   vars:
-    application: ansible-ssh  # Aligned with Terraform provider-level tags
+    # Aligned with Terraform tags
+    example: complete
+    module: vmlab
+
     instance_tag_name: "{{ hostvars[inventory_hostname].tags.Name }}"
 
   pre_tasks:
@@ -15,14 +18,28 @@
     - name: Say hello - ansible-lint will complain if a task does not have a name
       ansible.builtin.debug:
         msg: Greetings from {{ hostvars[ansible_host]['public_ip_address'] }}
+      tags:
+        - manners
+
+    - name: Debug example 1
+      ansible.builtin.debug:
+        var: instance_tag_name
+
+    - name: Debug example 2
+      ansible.builtin.debug:
+        msg: The 'environment' name is {{ module ~'-'~ example }}
 
     - name: Set the hostname to that of the Name tag
       become: true
       ansible.builtin.hostname:
         name: "{{ instance_tag_name }}"
         use: systemd
+      tags:
+        - configure
 
   post_tasks:
     - name: Say goodbye
       ansible.builtin.debug:
         msg: Goodbye from {{ hostvars[ansible_host]['public_ip_address'] }}
+      tags:
+        - manners

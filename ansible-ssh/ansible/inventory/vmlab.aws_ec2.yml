@@ -10,6 +10,7 @@ cache_prefix: aws_ec2
 filters:
   instance-state-name: running
 
+# Add hosts to tag_Name_Value groups for each Name/Value tag pair
 keyed_groups:
   - prefix: tag
     key: tags

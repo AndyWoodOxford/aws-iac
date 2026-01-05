@@ -11,14 +11,14 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Ensure the tags used to match the hosts are aligned with the provider-level tags
-in the Terraform [config](../terraform/main.tf). The `environment_name` is passed as an extra
-variable, e.g.
+Ensure the tags used to match the hosts are aligned with those in the Terraform config.
+For example, the Terraform [vmlab module](../../terraform/modules/vmlab/README.md) includes
+this [example](../../terraform/modules/vmlab/examples/complete/main.tf).
 
 ```shell
-# Terraform has used an Ubuntu AMI and set the 'environment' tag to 'example'
-ansible-playbook -v --extra-vars environment_name=example --user ubuntu playbook.yml --list-hosts 
-ansible-playbook -vv -e environment_name=wip playbook.yml
+ansible-playbook playbook.yml --list-hosts 
+ansible-playbook -v --user ubuntu --list-tags playbook.yml
+ansible-playbook -u ubuntu --skip-tags configure playbook.yml
 ansible-lint playbook.yml
 ```
 
