@@ -40,7 +40,12 @@ variable "instance_count" {
   description = "Number of instances"
   validation {
     condition     = var.instance_count <= 5
-    error_message = "No more than 5 instances can be launched."
+    error_message = <<-EOT
+    No more than 5 instances can be launched!
+
+    The Terraform plan will include ${var.instance_count} instances which could
+    result in an unpleasant AWS bill.
+    EOT
   }
   default = 1
 }

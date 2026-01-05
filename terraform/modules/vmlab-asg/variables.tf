@@ -38,7 +38,16 @@ variable "instance_type" {
 variable "asg_max_size" {
   type        = number
   description = "Maximum number of instances in the ASG"
-  default     = 1
+  validation {
+    condition     = var.asg_max_size <= local.asg_max_size
+    error_message = <<-EOT
+    The Autoscaling Group can contain a maximum of ${local.asg_max_size} instances!
+
+    This Terraform plan will include up to ${var.asg_max_size} instances which could
+    result in an unpleasant AWS bill.
+    EOT
+  }
+  default = 1
 }
 
 variable "asg_min_size" {

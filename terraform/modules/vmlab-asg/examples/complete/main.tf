@@ -23,6 +23,9 @@ module "vmlab" {
   # Ubuntu AMI
   platform = "ubuntu"
 
+  # allows the testing of the variable validation code
+  asg_max_size = 3
+
   # basic webserver
   userdata = "${path.module}/userdata-ubuntu.sh"
 
