@@ -38,6 +38,10 @@ data "aws_ami" "ubuntu" {
   }
 }
 
+data "aws_ec2_instance_type" "vm" {
+  instance_type = var.instance_type
+}
+
 # IAM
 data "aws_iam_policy" "ssm" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"

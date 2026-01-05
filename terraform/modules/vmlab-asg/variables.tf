@@ -35,6 +35,18 @@ variable "instance_type" {
   }
 }
 
+variable "asg_max_size" {
+  type        = number
+  description = "Maximum number of instances in the ASG"
+  default     = 1
+}
+
+variable "asg_min_size" {
+  type        = number
+  description = "Minimum number of instances in the ASG."
+  default     = 1
+}
+
 variable "userdata" {
   type        = string
   description = "Path to a file containing EC2 userdata (plain text)."

@@ -5,6 +5,8 @@ locals {
     ubuntu      = data.aws_ami.ubuntu.id
   }
 
+  asg_max_size = 5
+
   control_host = chomp(data.http.localhost.response_body)
 
   remote_users = {
