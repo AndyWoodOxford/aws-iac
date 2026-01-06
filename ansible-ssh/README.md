@@ -1,24 +1,25 @@
-# Ansible Playbook
+# Ansible SSH
 
 A simple [Ansible](./ansible/README.md) playbook that connects to AWS EC2 instances over `ssh`.
-The AWS resources are managed by [Terraform](./terraform/README.md).
 
-## Taskfile
-The Terraform tasks can be executed directly (see the [README](./terraform/README.md))
-*or* by using the [Taskfile](https://taskfile.dev/). For example:
+Instances can be spun up using the [VM Lab example](../terraform/modules/vmlab/examples/complete/README.md)
+in this repository. Ensure that the tags used to identify the hosts in Ansible's dynamic inventory
+are consistent between the Terraform and Ansible code.
 
-```bash
-brew install go-task
-
-# list targets
-task -l
-
-# lint the code
-task tlint
-
-# perform all static checks
-task
+Run the playbook inside a virtual environment:
+```shell
+python3 -m venv venv
+source ./venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
-The [dotenv](./.env.example) example can be copied into `.env` and used to set
-the environment name.
+These commands assume that the Terraform instances are based on an Ubuntu AMI.
+
+```shell
+ansible-playbook playbook.yml --list-hosts 
+ansible-playbook -v --user ubuntu --list-tags playbook.yml
+ansible-playbook -u ubuntu --skip-tags configure playbook.yml
+ansible-lint playbook.yml
+```
+
