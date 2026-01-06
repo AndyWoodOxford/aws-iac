@@ -1,10 +1,13 @@
 ---
 - name: Simple playbook to demonstrate EC2 connections over ssh
   hosts: "tag_example_{{ example }}:&tag_module_{{ module }}"  # assumes no hyphens
+  gather_facts: true
   any_errors_fatal: true
 
   vars:
-    # Aligned with Terraform tags
+    # Managed by the AWS dynamic inventory plug-in. These variables are aligned
+    # with Terraform tags, i.e. instance tags with key-pairs "example: complete"
+    # *and* "module: vmlab"
     example: complete
     module: vmlab
 
@@ -13,6 +16,16 @@
   pre_tasks:
     - name: Ping the hosts
       ansible.builtin.ping:
+
+    - name: Facts - O/S details
+      ansible.builtin.debug:
+        msg: >-
+          os_family:
+            {{ ansible_facts.os_family }},
+          distro:
+            {{ ansible_facts.distribution }}, {{ ansible_facts.distribution_version }},
+          kernel:
+            {{ ansible_facts.kernel }}
 
   tasks:
     - name: Say hello - ansible-lint will complain if a task does not have a name
