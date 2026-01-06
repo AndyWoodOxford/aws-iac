@@ -6,8 +6,8 @@
 
   vars:
     # Managed by the AWS dynamic inventory plug-in. These variables are aligned
-    # with Terraform tags, i.e. instance tags with key-pairs "example: complete"
-    # *and* "module: vmlab"
+    # with Terraform tags, i.e. the hosts string above will match instance tags
+    # with key-pairs "example: complete" *and* "module: vmlab"
     example: complete
     module: vmlab
 

@@ -20,7 +20,7 @@ module "vmlab" {
   name = local.name
 
   # set to "true" to create a VPC; set to "false" to use the default VPC
-  create_vpc = "true"
+  create_vpc = "false"
 
   # spin up one Ubuntu instance
   instance_count = 1
