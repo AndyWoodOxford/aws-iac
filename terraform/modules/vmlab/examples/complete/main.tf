@@ -22,8 +22,8 @@ module "vmlab" {
   # set to "true" to create a VPC; set to "false" to use the default VPC
   create_vpc = "false"
 
-  # spin up one Ubuntu instance
-  instance_count = 1
+  # spin up one (or maybe two) Ubuntu instance(s)
+  instance_count = 2
   platform       = "ubuntu"
 
   # basic webserver
