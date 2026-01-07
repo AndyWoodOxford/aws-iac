@@ -14,6 +14,44 @@ $ terraform plan
 $ terraform apply
  ```
 
+If using an S3 remote state, e.g.
+```shell
+export ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+export REGION=$(aws s3api head-bucket --bucket 730918948368-terraform-remote-state --query "Buc
+ketRegion" --output text)
+export EXAMPLE=$(basename $(pwd))
+export MODULE=$(basename $(cd ../../; pwd))
+
+# < v1.10.0
+terraform init \
+  -backend-config="bucket=${ACCOUNT}-terraform-remote-state"\
+  -backend-config="key=${MODULE}/examples/${EXAMPLE}"\
+  -backend-config="dynamodb_table=${ACCOUNT}-terraform-remote-state"\
+  -backend-config="encrypt=true"\
+  -backend-config="region=${REGION}"
+ 
+ # >= v1.10.0
+terraform init \
+  -backend-config="bucket=${ACCOUNT}-terraform-remote-state"\
+  -backend-config="key=${MODULE}/examples/${EXAMPLE}"\
+  -backend-config="use_lockfile=true" \
+  -backend-config="encrypt=true"\
+  -backend-config="region=${REGION}"
+```
+
+or populate the backend block (but, variables and functions are not permitted there).
+```terraform
+terraform {
+  backend "s3" {
+    bucket       = "xxxxxxxxxxxx-terraform-remote-state"
+    key          = "vmlab/examples/complete"
+    use_lockfile = true
+    encrypt      = true
+    region       = "eu-west-2"
+  }
+}
+```
+
 Run `terraform destroy` to clean up.
 
 <!-- BEGIN_TF_DOCS -->
