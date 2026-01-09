@@ -9,5 +9,5 @@ terraform {
   }
 
   # uncomment for a remote S3 backend (see the README)
-  backend "s3" {}
+  #backend "s3" {}
 }
