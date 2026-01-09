@@ -42,8 +42,8 @@ module "vmlab" {
 
 # pseudo-dynamic inventory for Ansible
 resource "local_file" "hosts" {
-  filename = "${path.module}/hosts.cfg"
-  content = templatefile("${path.module}/hosts.cfg.tpl", {
+  filename = "${path.cwd}/hosts.cfg"
+  content = templatefile("${path.cwd}/hosts.cfg.tpl", {
     host_group = "webservers"
     ipv4s      = module.vmlab.instances_ipv4
   })

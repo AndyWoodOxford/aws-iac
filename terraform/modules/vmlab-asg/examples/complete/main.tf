@@ -27,7 +27,7 @@ module "vmlab" {
   asg_max_size = 3
 
   # basic webserver
-  userdata = "${path.module}/userdata-ubuntu.sh"
+  userdata = "${path.cwd}/userdata-ubuntu.sh"
 
   # allow ingress for http and ping
   control_host_ingress = [
