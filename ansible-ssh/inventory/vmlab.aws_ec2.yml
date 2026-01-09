@@ -4,7 +4,7 @@ plugin: amazon.aws.aws_ec2
 regions:
   - eu-west-2
 
-cache: yes
+cache: true
 cache_prefix: aws_ec2
 
 filters:
