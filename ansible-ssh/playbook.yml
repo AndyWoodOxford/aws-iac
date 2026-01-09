@@ -2,6 +2,7 @@
 - name: Simple playbook to demonstrate EC2 connections over ssh
   hosts: "tag_example_{{ example }}:&tag_module_{{ module }}"  # assumes no hyphens
   gather_facts: true
+  remote_user: ubuntu
   any_errors_fatal: true
 
   vars:
