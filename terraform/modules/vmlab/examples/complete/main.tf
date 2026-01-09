@@ -39,3 +39,12 @@ module "vmlab" {
   # public key for ssh access (optional)
   public_key_path = "~/.ssh/id_rsa.pub"
 }
+
+# pseudo-dynamic inventory for Ansible
+resource "local_file" "hosts" {
+  filename = "${path.module}/hosts.cfg"
+  content = templatefile("${path.module}/hosts.cfg.tpl", {
+    host_group = "webservers"
+    ipv4s      = module.vmlab.instances_ipv4
+  })
+}
