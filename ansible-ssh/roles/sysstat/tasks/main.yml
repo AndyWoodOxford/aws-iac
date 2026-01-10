@@ -1,0 +1,58 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for sysstat
+
+- name: Sysstat - say hello
+  ansible.builtin.debug:
+    var: sysstat_message
+
+- name: Sysstat - settings
+  ansible.builtin.debug:
+    msg: "History is {{ sysstat_history_days }} days, compress after {{ sysstat_compress_after_days }} days."
+
+- name: Sysstat - install the package
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name: sysstat
+    state: present
+
+- name: Sysstat - configure the retention period
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sysstat/sysstat
+    regex: '^HISTORY='
+    line: HISTORY={{ sysstat_history_days }}
+  notify:
+    - Restart sysstat
+
+- name: Sysstat - configure the compression period
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sysstat/sysstat
+    regex: '^COMPRESSAFTER='
+    line: COMPRESSAFTER={{ sysstat_compress_after_days }}
+  notify:
+    - Restart sysstat
+
+- name: Sysstat - enable the service
+  become: true
+  ansible.builtin.service:
+    name: sysstat
+    enabled: true
+
+- name: Sysstat - copy a file
+  become: true
+  become_user: ubuntu
+  ansible.builtin.copy:
+    src: foo.txt
+    dest: /home/ubuntu
+    mode: "0640"
+
+- name: Sysstat - copy a template
+  become: true
+  become_user: ubuntu
+  ansible.builtin.template:
+    src: bar.txt.j2
+    dest: /home/ubuntu/bar.txt
+    mode: "0640"

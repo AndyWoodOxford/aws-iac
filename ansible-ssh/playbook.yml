@@ -35,11 +35,7 @@
       tags:
         - manners
 
-    - name: Debug example 1
-      ansible.builtin.debug:
-        var: instance_tag_name
-
-    - name: Debug example 2
+    - name: Debug example
       ansible.builtin.debug:
         msg: The 'environment' name is {{ module ~'-'~ example }}
 
@@ -50,6 +46,11 @@
         use: systemd
       tags:
         - configure
+
+  roles:
+    - name: sysstat
+      vars:
+        sysstat_message: "Passed in to override default"
 
   post_tasks:
     - name: Say goodbye
