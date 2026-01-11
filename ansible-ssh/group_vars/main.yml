@@ -1,5 +1,0 @@
----
-# Ansible managed files - header comment
-ansible_managed: |+
-  This file is managed by Ansible and NOT by you!
-  Instead edit the source template.

@@ -2,4 +2,3 @@
 ---
 # vars file for sysstat
 sysstat_history_days: 33
-sysstat_compress_after_days: 66

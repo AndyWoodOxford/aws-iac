@@ -8,7 +8,7 @@
 
 - name: Sysstat - settings
   ansible.builtin.debug:
-    msg: "History is {{ sysstat_history_days }} days, compress after {{ sysstat_compress_after_days }} days."
+    msg: "History is {{ sysstat_history_days }} days."
 
 - name: Sysstat - install the package
   become: true
@@ -26,15 +26,6 @@
   notify:
     - Restart sysstat
 
-- name: Sysstat - configure the compression period
-  become: true
-  ansible.builtin.lineinfile:
-    path: /etc/sysstat/sysstat
-    regex: '^COMPRESSAFTER='
-    line: COMPRESSAFTER={{ sysstat_compress_after_days }}
-  notify:
-    - Restart sysstat
-
 - name: Sysstat - enable the service
   become: true
   ansible.builtin.service:
@@ -46,8 +37,17 @@
   become_user: ubuntu
   ansible.builtin.copy:
     src: foo.txt
-    dest: /home/ubuntu
+    dest: /home/ubuntu/foo.txt
     mode: "0640"
+
+- name: Add a line
+  become: true
+  become_user: ubuntu
+  ansible.builtin.lineinfile:
+    path: /home/ubuntu/foo.txt
+    line: "This is the last line"
+    insertafter: EOF
+
 
 - name: Sysstat - copy a template
   become: true
