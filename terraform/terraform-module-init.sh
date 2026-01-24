@@ -13,7 +13,6 @@ function fn_usage() {
   echo
   echo -e  "${BOLD_WHITE}Options:${COLOUR_OFF}"
   echo "  -h     Show this usage message and exit"
-  echo "  -v     Verbose mode"
   echo
   echo -e  "${BOLD_WHITE}Positional arguments:${COLOUR_OFF}"
   echo "  MODULE    Name of the module/sub-directory"
@@ -23,10 +22,7 @@ function fn_usage() {
 }
 
 function fn_log() {
-  if ${VERBOSE_MODE}
-  then
-    echo -e "$@"
-  fi
+  echo -e "$@"
 }
 
 function fn_directory_exists() {
@@ -57,7 +53,13 @@ function fn_create_files() {
   for file in "${TF_FILES[@]}"
   do
     filepath="${parent}/$file"
-    touch "${filepath}"
+    if ! eval fn_file_exists "${filepath}"
+    then
+      touch "${filepath}"
+      fn_log "  Created file ${BOLD_GREEN}${file}${COLOUR_OFF}"
+    else
+      fn_log "  ${BOLD_WHITE}${file}${COLOUR_OFF} already exists"
+    fi
   done
 
   MD_FILES=(
@@ -68,27 +70,31 @@ function fn_create_files() {
   for file in "${MD_FILES[@]}"
   do
     filepath="${parent}/$file"
-    touch "${filepath}"
+    if ! eval fn_file_exists "${filepath}"
+    then
+      touch "${filepath}"
+      fn_log "  Created file ${BOLD_GREEN}${file}${COLOUR_OFF}"
+    else
+      fn_log "  ${BOLD_WHITE}${file}${COLOUR_OFF} already exists"
+    fi
   done
 }
 
-function fn_examples() {
-  local module_root=$1
+function fn_create_example() {
+  local parent=$1
+  local example=$2
 
-  if ! eval fn_directory_exists "${module_root}/examples"
+
+  example_dir="${parent}/${example}"
+  if ! eval fn_directory_exists "${example_dir}"
   then
-    mkdir "${module_root}/examples"
-    fn_log "Created directory ${BOLD_GREEN}${module_root}/examples${COLOUR_OFF}"
+    mkdir "${example_dir}"
+    fn_log "  Created directory ${BOLD_GREEN}${example_dir}${COLOUR_OFF}"
+  else
+    fn_log "  Example directory ${BOLD_WHITE}${example}${COLOUR_OFF} already exists"
   fi
 
-  example_complete_dir="${module_root}/examples/complete"
-  if ! eval fn_directory_exists "${example_complete_dir}"
-  then
-    mkdir "${example_complete_dir}"
-    fn_log "Created directory ${BOLD_GREEN}${example_complete_dir}${COLOUR_OFF}"
-  fi
-
-  fn_create_files "${example_complete_dir}"
+  fn_create_files "${example_dir}"
 }
 
 COLOUR_OFF='\033[0m'
@@ -102,15 +108,11 @@ BOLD_WHITE='\033[1;37m'
 ### ENTRY
 TERRAFORM=$(command -v terraform)
 
-VERBOSE_MODE=false
-while getopts "hv" opt; do
+while getopts "h" opt; do
   case "${opt}" in
   h | \?)
     fn_usage
     exit 0
-    ;;
-  v)
-    VERBOSE_MODE=true
     ;;
   [?])
     shift
@@ -128,8 +130,7 @@ module_name=$1
 
 # look for modules folder, prompt to create if needed
 MODULES="modules"
-fn_log "Checking if a ${BOLD_WHITE}${MODULES}${COLOUR_OFF} directory exists"
-if ! eval fn_directory_exists ${MODULES}
+if ! eval fn_directory_exists "${MODULES}"
 then
   echo -e "A ${BOLD_WHITE}${MODULES}${COLOUR_OFF} directory does not exist in the current directory - do you wish to create it?"
     while true
@@ -140,21 +141,42 @@ then
 
     if [[ "${response}" == "y" ]]
     then
-      mkdir ${MODULES}
+      mkdir "${MODULES}"
       fn_log "Directory created!"
     fi
 
 fi
 
-module_root="$(pwd)/${MODULES}/${module_name}"
-if ! eval fn_directory_exists "${module_root}"
+# Module configuration
+module_dir="${MODULES}/${module_name}"
+fn_log "Starting directories and files for the ${BOLD_WHITE}${module_name}${COLOUR_OFF} module"
+if ! eval fn_directory_exists "${module_dir}"
 then
-  mkdir "${module_root}"
-  fn_log "Created directory ${BOLD_GREEN}${module_root}${COLOUR_OFF}"
+  mkdir "${module_dir}"
+  fn_log "Created module directory ${BOLD_GREEN}${module_dir}${COLOUR_OFF}"
+else
+  fn_log "Directory ${BOLD_WHITE}${module_dir}${COLOUR_OFF} already exists"
 fi
 
-fn_create_files "${module_root}"
-fn_examples "${module_root}"
+fn_log "Creating files in the ${BOLD_WHITE}${module_dir}${COLOUR_OFF} directory"
+fn_create_files "${module_dir}"
+
+# Examples
+echo
+examples_dir="${module_dir}/examples"
+if ! eval fn_directory_exists "${examples_dir}"
+then
+  mkdir "${examples_dir}"
+  fn_log "Created directory ${BOLD_GREEN}${examples_dir}${COLOUR_OFF}"
+  echo
+fi
+
+examples=("complete")
+for example in "${examples[@]}"
+do
+  fn_log "Creating directories and files for the ${BOLD_WHITE}${example}${COLOUR_OFF} example"
+  fn_create_example "${examples_dir}" "${example}"
+done
 
 
 
