@@ -9,7 +9,17 @@ provider "aws" {
 }
 
 locals {
-  name = "vmlab-${basename(path.cwd)}"
+  name = "vpc-example-${basename(path.cwd)}"
+}
+
+output "vpc_id" {
+  description = "VPC ID"
+  value       = module.vpc.vpc_id
+}
+
+output "public_subnet_ids" {
+  description = "IDs of the public subnets"
+  value       = module.vpc.public_subnet_ids
 }
 
 module "vpc" {
@@ -17,6 +27,11 @@ module "vpc" {
 
   name = local.name
 
-  create_vpc = "true"
+  create_vpc = "false"
+
+  tags = {
+    category = "example"
+    example  = basename(path.cwd)
+  }
 }
 

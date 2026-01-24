@@ -28,10 +28,10 @@ locals {
   availability_zones = data.aws_availability_zones.az.names
 
   private_subnets_ipv4 = [
-    for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i)]
+  for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i)]
 
   public_subnets_ipv4 = [
-    for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
+  for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
 }
 
 module "vpc" {
