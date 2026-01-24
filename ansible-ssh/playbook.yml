@@ -1,7 +1,30 @@
 ---
+- name: Sinple tasks on localhost
+  hosts: localhost
+  tags: vimes
+  any_errors_fatal: true
+
+  tasks:
+    - name: Example of a default value
+      ansible.builtin.debug:
+        msg: "This undefined variable has a default of \"{{ my_undefined_var | default('foo') }}\""
+
+    - name: Example of a env lookup
+      ansible.builtin.set_fact:
+        downloads_folder: "{{ lookup('ansible.builtin.env', 'HOME') }}/Downloads"
+
+    - name: Auto-inclusion of group_vars/all/main.yml
+      ansible.builtin.debug:
+        var: foo
+
+    - name: Encrypted variable
+      ansible.builtin.debug:
+        var: vault_var
+
 - name: Simple playbook to demonstrate EC2 connections over ssh
   hosts: "tag_example_{{ example }}:&tag_module_{{ module }}"  # assumes no hyphens
   gather_facts: true
+  remote_user: ubuntu
   any_errors_fatal: true
 
   vars:
@@ -27,6 +50,11 @@
           kernel:
             {{ ansible_facts.kernel }}
 
+    - name: Example of a delegated task
+      delegate_to: localhost
+      ansible.builtin.debug:
+        msg: "This undefined variable has a default of \"{{ my_undefined_var | default('foo') }}\""
+
   tasks:
     - name: Say hello - ansible-lint will complain if a task does not have a name
       ansible.builtin.debug:
@@ -34,11 +62,7 @@
       tags:
         - manners
 
-    - name: Debug example 1
-      ansible.builtin.debug:
-        var: instance_tag_name
-
-    - name: Debug example 2
+    - name: Debug example
       ansible.builtin.debug:
         msg: The 'environment' name is {{ module ~'-'~ example }}
 
@@ -49,6 +73,11 @@
         use: systemd
       tags:
         - configure
+
+  roles:
+    - name: sysstat
+      vars:
+        sysstat_message: "Passed in to override default"
 
   post_tasks:
     - name: Say goodbye

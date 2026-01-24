@@ -22,8 +22,8 @@ module "vmlab" {
   # set to "true" to create a VPC; set to "false" to use the default VPC
   create_vpc = "false"
 
-  # spin up one Ubuntu instance
-  instance_count = 1
+  # spin up one (or maybe two) Ubuntu instance(s)
+  instance_count = 2
   platform       = "ubuntu"
 
   # basic webserver
@@ -38,4 +38,13 @@ module "vmlab" {
 
   # public key for ssh access (optional)
   public_key_path = "~/.ssh/id_rsa.pub"
+}
+
+# pseudo-dynamic inventory for Ansible
+resource "local_file" "hosts" {
+  filename = "${path.cwd}/hosts.cfg"
+  content = templatefile("${path.cwd}/hosts.cfg.tpl", {
+    host_group = "webservers"
+    ipv4s      = module.vmlab.instances_ipv4
+  })
 }

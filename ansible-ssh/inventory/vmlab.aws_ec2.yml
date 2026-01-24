@@ -4,17 +4,12 @@ plugin: amazon.aws.aws_ec2
 regions:
   - eu-west-2
 
-cache: yes
-cache_prefix: aws_ec2
-
 filters:
   instance-state-name: running
 
-# Add hosts to tag_Name_Value groups for each Name/Value tag pair
 keyed_groups:
   - prefix: tag
     key: tags
 
 hostnames:
   - ip-address
-  - instance-id

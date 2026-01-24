@@ -63,6 +63,40 @@ resource "aws_security_group" "control_host_ingress" {
   )
 }
 
+# alternative method for control host ingress - explicit ingress rule resources
+resource "aws_security_group" "control_host_ingress_alt" {
+  name   = "${var.name}-ingress-alt"
+  vpc_id = var.create_vpc ? module.vpc[0].vpc_id : data.aws_vpc.default.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = merge(
+    local.standard_tags,
+    {
+      Name = "${var.name}-control-host-alt"
+    }
+  )
+}
+
+resource "aws_vpc_security_group_ingress_rule" "control_host_alt" {
+  security_group_id = aws_security_group.control_host_ingress_alt.id
+
+  for_each = tomap({
+    for rule in var.control_host_ingress : rule.description => rule
+  })
+
+  ip_protocol = each.value.protocol
+  from_port   = each.value.from_port
+  to_port     = each.value.to_port
+  description = each.value.description
+  cidr_ipv4   = "${local.control_host}/32"
+
+  tags = local.standard_tags
+}
+
+
 resource "aws_key_pair" "ansible" {
   count      = var.public_key_path != null ? 1 : 0
   key_name   = var.name
@@ -83,7 +117,7 @@ resource "aws_instance" "vm" {
     volume_type           = "gp3"
     volume_size           = 25
     encrypted             = true
-    kms_key_id            = aws_kms_key.encryptor.id
+    kms_key_id            = aws_kms_key.encryptor.arn
     delete_on_termination = true
   }
 

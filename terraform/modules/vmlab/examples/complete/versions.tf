@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.5.7"
+  required_version = ">= 1.10.0"
 
   required_providers {
     aws = {
@@ -7,4 +7,7 @@ terraform {
       version = "~> 6.5"
     }
   }
+
+  # uncomment for a remote S3 backend (see the README)
+  #backend "s3" {}
 }

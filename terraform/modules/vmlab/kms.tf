@@ -28,7 +28,7 @@ resource "aws_kms_key_policy" "encryptor" {
       {
         Effect = "Allow",
         Principal = {
-          Service = "logs.${data.aws_region.current.name}.amazonaws.com"
+          Service = "logs.${data.aws_region.current.id}.amazonaws.com"
         },
         Action = [
           "kms:Encrypt*",
