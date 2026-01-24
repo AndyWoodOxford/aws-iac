@@ -78,6 +78,10 @@ function fn_create_files() {
       fn_log "  ${BOLD_WHITE}${file}${COLOUR_OFF} already exists"
     fi
   done
+
+  fn_start_main_tf "${parent}/main.tf"
+  fn_start_versions_tf "${parent}/versions.tf"
+  fn_start_variables_tf "${parent}/variables.tf"
 }
 
 function fn_create_example() {
@@ -97,6 +101,73 @@ function fn_create_example() {
   fn_create_files "${example_dir}"
 }
 
+function fn_start_versions_tf() {
+  local versions_tf=$1
+
+  fn_log "Populating ${BOLD_WHITE}${versions_tf}${COLOUR_OFF}"
+  tee "${versions_tf}" > /dev/null <<EOF
+terraform {
+  required_version = ">= ${TERRAFORM_VERSION}"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> ${AWS_PROVIDER_VERSION}"
+    }
+  }
+
+  # uncomment for a remote S3 backend
+  #backend "s3" {}
+}
+EOF
+}
+
+function fn_start_main_tf() {
+  local main_tf=$1
+
+  fn_log "Populating ${BOLD_WHITE}${main_tf}${COLOUR_OFF}"
+  tee "${main_tf}" > /dev/null <<EOF
+provider "aws" {
+  region = "${AWS_REGION}"
+
+  default_tags {
+    tags = {
+      terraform = "true"
+    }
+  }
+}
+
+EOF
+
+  tee -a "${main_tf}" > /dev/null <<EOF
+locals {}
+EOF
+}
+
+function fn_start_variables_tf() {
+  local variables_tf=$1
+
+  fn_log "Populating ${BOLD_WHITE}${variables_tf}${COLOUR_OFF}"
+  tee "${variables_tf}" > /dev/null <<EOF
+variable "name" {
+  type        = string
+  description = "All resources will use this as a Name, or as a prefix to the Name"
+  validation {
+    condition     = var.name == lower(var.name)
+    error_message = "The resources cannot have upper case characters."
+  }
+  default = "CHANGEME"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Add these tags to all resources"
+  default     = {}
+}
+
+EOF
+}
+
 COLOUR_OFF='\033[0m'
 
 BOLD_RED='\033[1;31m'
@@ -106,6 +177,8 @@ BOLD_CYAN='\033[1;36m'
 BOLD_WHITE='\033[1;37m'
 
 ### ENTRY
+AWS_REGION="eu-west-2"
+AWS_PROVIDER_VERSION="6.5"
 TERRAFORM=$(command -v terraform)
 
 while getopts "h" opt; do
@@ -127,6 +200,19 @@ then
   exit 1
 fi
 module_name=$1
+
+# Terraform version
+TFENV=$(command -v tfenv) || true
+if [[ -n "${TFENV}" ]]
+then
+  TERRAFORM_VERSION=$($TFENV version-name)
+else
+  echo -e "${BOLD_YELLOW}TODO${COLOUR_OFF} handle case of ${BOLD_WHITE}tfenv${COLOUR_OFF} not being used to manage Terraform versions"
+  TERRAFORM_VERSION=$($TERRAFORM --version)  # multi-line output if tfenv present
+  exit 1
+fi
+fn_log "The current / local Terraform version is ${BOLD_CYAN}${TERRAFORM_VERSION}${COLOUR_OFF}"
+echo
 
 # look for modules folder, prompt to create if needed
 MODULES="modules"
@@ -178,17 +264,3 @@ do
   fn_create_example "${examples_dir}" "${example}"
 done
 
-
-
-
-
-TFENV=$(command -v tfenv) || true
-if [[ -n "${TFENV}" ]]
-then
-  terraform_version=$($TFENV version-name)
-else
-  echo -e "${BOLD_YELLOW}TODO${COLOUR_OFF} handle case of ${BOLD_WHITE}tfenv${COLOUR_OFF} not being used to manage Terraform versions"
-  exit 1
-fi
-
-fn_log "The current / local Terraform version is ${BOLD_CYAN}${terraform_version}${COLOUR_OFF}"
