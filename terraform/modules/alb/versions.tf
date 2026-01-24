@@ -1,15 +1,13 @@
 terraform {
-  required_version = ">= 1.5.7"
+  required_version = ">= 1.14.1"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 6.5"
     }
-
-    http = {
-      source  = "hashicorp/http"
-      version = "~> 3.4"
-    }
   }
+
+  # uncomment for a remote S3 backend
+  #backend "s3" {}
 }

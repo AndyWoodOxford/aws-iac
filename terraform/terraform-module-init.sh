@@ -63,7 +63,6 @@ function fn_create_files() {
   done
 
   MD_FILES=(
-    CHANGELOG.md
     README.md
   )
 
@@ -82,12 +81,13 @@ function fn_create_files() {
   fn_start_main_tf "${parent}/main.tf"
   fn_start_versions_tf "${parent}/versions.tf"
   fn_start_variables_tf "${parent}/variables.tf"
+  fn_start_readme_md "${parent}/README.md" "${parent}"
+  fn_terraform_docs "${parent}/.terraform-docs.yml"
 }
 
 function fn_create_example() {
   local parent=$1
   local example=$2
-
 
   example_dir="${parent}/${example}"
   if ! eval fn_directory_exists "${example_dir}"
@@ -165,6 +165,76 @@ variable "tags" {
   default     = {}
 }
 
+EOF
+}
+
+function fn_start_readme_md() {
+  local readme_md=$1
+  local header=$2
+
+  fn_log "Populating ${BOLD_WHITE}${readme_md}${COLOUR_OFF}"
+
+  tee "${readme_md}" > /dev/null <<EOF
+# ${header}
+EOF
+
+  for i in {1..5}
+  do
+    echo | tee -a "${readme_md}" > /dev/null
+  done
+
+  tee -a "${readme_md}" > /dev/null <<EOF
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->
+EOF
+}
+
+function fn_terraform_docs() {
+   local terraform_docs=$1
+
+   fn_log "Populating ${BOLD_WHITE}${terraform_docs}${COLOUR_OFF}"
+
+   tee -a "${terraform_docs}" > /dev/null <<EOF
+---
+formatter: markdown table
+
+content: |-
+ ## Table of Contents
+
+ - [Requirements][1]
+ - [Inputs][2]
+ - [Outputs][3]
+ - [Modules][4]
+ - [Resources][5]
+
+ {{ .Header }}
+
+ {{ .Requirements }}{{"\n"}}
+ {{ .Inputs }}{{"\n"}}
+ {{ .Outputs }}{{"\n"}}
+ {{ .Modules }}{{"\n"}}
+ {{ .Resources }}{{"\n"}}
+ [1]: #requirements
+ [2]: #inputs
+ [3]: #outputs
+ [4]: #modules
+ [5]: #resources
+
+sort:
+ enabled: true
+
+output:
+ file: README.md
+ mode: inject
+ template: |-
+   <!-- BEGIN_TF_DOCS -->
+   {{ .Content }}
+   <!-- END_TF_DOCS -->
+
+settings:
+ indent: 2
+ read-comments: false
+ hide-empty: false
 EOF
 }
 

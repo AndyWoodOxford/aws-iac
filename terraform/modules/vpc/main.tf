@@ -1,11 +1,37 @@
+provider "aws" {
+  region = "eu-west-2"
+
+  default_tags {
+    tags = {
+      terraform = "true"
+    }
+  }
+}
+
+data "aws_vpc" "default" {
+  default = "true"
+  state   = "available"
+}
+
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+data "aws_availability_zones" "az" {
+  state = "available"
+}
+
 locals {
   availability_zones = data.aws_availability_zones.az.names
 
   private_subnets_ipv4 = [
-  for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i)]
+    for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i)]
 
   public_subnets_ipv4 = [
-  for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
+    for i in range(0, length(local.availability_zones)) : cidrsubnet(var.vpc_cidr, var.subnet_cidr_mask - 16, i + length(local.availability_zones))]
 }
 
 module "vpc" {
@@ -39,5 +65,5 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = local.standard_tags
+  tags = var.tags
 }
