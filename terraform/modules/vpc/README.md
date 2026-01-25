@@ -1,8 +1,4 @@
-# modules/vpc
-
-
-
-
+# VPC Module
 
 <!-- BEGIN_TF_DOCS -->
 <!-- END_TF_DOCS -->
